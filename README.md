@@ -56,6 +56,9 @@ npm run preview
    - **Build output directory**: `dist`
    - **Environment variables**:
      - `VITE_SHOW_ADS`: set to `true` if you want to enable ad placeholders
+4. Keep SPA fallback enabled via `public/_redirects`:
+   - `/* /index.html 200`
+   - This prevents blank pages when opening or refreshing non-root routes.
 
 ### Option 2: Wrangler (Manual)
 ```bash
