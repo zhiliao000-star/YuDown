@@ -37,9 +37,10 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
       onDragOver={handleDrag}
       onDrop={handleDrop}
       className={cn(
-        'relative rounded-[24px] border border-dashed p-7 text-center transition-colors',
-        'border-[var(--border-soft)] bg-[var(--surface-raised)] hover:border-[var(--accent-soft)]',
-        isDragActive && 'border-[var(--accent-strong)] bg-white'
+        'relative rounded-[28px] border border-dashed p-8 text-center transition-all',
+        'border-[rgba(201,156,132,0.2)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,242,0.88))]',
+        'shadow-[0_18px_38px_rgba(188,140,108,0.08)] hover:border-[rgba(207,132,95,0.32)] hover:shadow-[0_22px_44px_rgba(188,140,108,0.12)]',
+        isDragActive && 'border-[var(--accent-strong)] bg-[linear-gradient(180deg,rgba(255,255,255,1),rgba(255,244,236,0.96))]'
       )}
     >
       <input
@@ -49,11 +50,11 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
         onChange={(e) => e.target.files && onFilesSelected(Array.from(e.target.files))}
         className="absolute inset-0 cursor-pointer opacity-0"
       />
-      <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-[18px] border border-[var(--border-soft)] bg-white text-[var(--accent-strong)] shadow-[var(--shadow-soft)]">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[20px] border border-[rgba(206,155,128,0.18)] bg-[linear-gradient(180deg,#fffdfb,#fff4ec)] text-[var(--accent-strong)] shadow-[0_10px_22px_rgba(191,141,111,0.12)]">
         <Upload className="h-4 w-4" />
       </div>
-      <p className="mt-3 text-sm font-medium text-[var(--fg)]">Drop files here or click to upload</p>
-      <p className="mt-1 text-xs text-[var(--muted)]">{multiple ? 'Multiple files supported' : 'Single file mode'}</p>
+      <p className="mt-4 text-[15px] font-semibold text-[var(--fg)]">Drop files here or click to upload</p>
+      <p className="mt-1 text-sm text-[var(--muted)]">{multiple ? 'Multiple files supported' : 'Single file mode'}</p>
     </div>
   );
 };
