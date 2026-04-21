@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="YuDown is a minimalist YouTube downloader for MP3 and MP4 downloads."
+    />
+    <title>YuDown</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #000000;
+        --fg: #ffffff;
+        --muted: rgba(255, 255, 255, 0.62);
+        --soft: rgba(255, 255, 255, 0.14);
+        --soft-strong: rgba(255, 255, 255, 0.22);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: Inter, Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .shell {
+        width: min(100%, 760px);
+        border: 1px solid var(--fg);
+        padding: 32px;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(36px, 6vw, 64px);
+        line-height: 0.95;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+      }
+
+      .subcopy {
+        max-width: 32rem;
+        margin: 0 0 36px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      form {
+        display: grid;
+        gap: 18px;
+      }
+
+      .input-row {
+        display: grid;
+        gap: 12px;
+      }
+
+      input[type='url'],
+      select,
+      button {
+        width: 100%;
+        appearance: none;
+        border: 1px solid var(--fg);
+        background: transparent;
+        color: var(--fg);
+        font: inherit;
+      }
+
+      input[type='url'],
+      select {
+        padding: 16px 18px;
+        min-height: 56px;
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.42);
+      }
+
+      .controls {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mode-group {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .mode-button,
+      .submit-button {
+        min-height: 56px;
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: background 160ms ease, color 160ms ease, opacity 160ms ease;
+      }
+
+      .mode-button.active,
+      .submit-button {
+        background: #ffffff;
+        color: #000000;
+      }
+
+      .mode-button:not(.active):hover,
+      .submit-button:hover {
+        opacity: 0.86;
+      }
+
+      .submit-button[disabled] {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .quality-wrap[hidden],
+      .status[hidden] {
+        display: none;
+      }
+
+      .status {
+        margin-top: 28px;
+        border-top: 1px solid var(--soft);
+        padding-top: 18px;
+      }
+
+      .status-line {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .status-line strong {
+        color: var(--fg);
+        font-weight: 500;
+      }
+
+      .loading {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .loading::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--fg);
+        animation: pulse 0.9s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(0.8);
+        }
+
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          padding: 22px;
+        }
+
+        .controls {
+          grid-template-columns: 1fr;
+        }
+
+        .mode-group {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <p class="eyebrow">YuDown</p>
+      <h1>YouTube downloads, reduced to the essentials.</h1>
+      <p class="subcopy">
+        Paste a public YouTube link, choose MP3 or MP4, and let YuDown hand back a direct download with no clutter.
+      </p>
+
+      <form id="download-form">
+        <div class="input-row">
+          <input
+            id="url-input"
+            type="url"
+            inputmode="url"
+            placeholder="Paste YouTube Link Here"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <div class="controls">
+          <div class="mode-group" role="group" aria-label="Download format">
+            <button type="button" class="mode-button active" data-mode="mp3">MP3</button>
+            <button type="button" class="mode-button" data-mode="mp4">MP4</button>
+          </div>
+
+          <div class="quality-wrap" id="quality-wrap" hidden>
+            <select id="quality-select" aria-label="Video quality">
+              <option value="1080">1080p</option>
+              <option value="720">720p</option>
+              <option value="480">480p</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="submit-button" class="submit-button" type="submit">Download</button>
+      </form>
+
+      <section class="status" id="status" hidden aria-live="polite">
+        <p class="status-line" id="status-text"></p>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById('download-form');
+      const urlInput = document.getElementById('url-input');
+      const qualityWrap = document.getElementById('quality-wrap');
+      const qualitySelect = document.getElementById('quality-select');
+      const submitButton = document.getElementById('submit-button');
+      const status = document.getElementById('status');
+      const statusText = document.getElementById('status-text');
+      const modeButtons = Array.from(document.querySelectorAll('.mode-button'));
+
+      let mode = 'mp3';
+
+      modeButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          mode = button.dataset.mode;
+          modeButtons.forEach((candidate) => candidate.classList.toggle('active', candidate === button));
+          qualityWrap.hidden = mode !== 'mp4';
+          clearStatus();
+        });
+      });
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const url = urlInput.value.trim();
+        if (!isValidYouTubeUrl(url)) {
+          showStatus('Please enter a valid YouTube URL.', true);
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const response = await fetch('/api/download', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              url,
+              format: mode,
+              quality: qualitySelect.value
+            })
+          });
+
+          const data = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Unable to process this video right now.');
+          }
+
+          if (!data.url) {
+            throw new Error('No download link was returned.');
+          }
+
+          showStatus('Your file is ready. Starting download now.');
+          triggerDownload(data.url, mode);
+        } catch (error) {
+          showStatus(error.message || 'Download failed.', true);
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      function setLoading(isLoading) {
+        submitButton.disabled = isLoading;
+        if (isLoading) {
+          status.hidden = false;
+          statusText.innerHTML = '<span class="loading"><strong>Processing...</strong> Please wait.</span>';
+          return;
+        }
+      }
+
+      function showStatus(message, isError = false) {
+        status.hidden = false;
+        statusText.innerHTML = `<strong>${isError ? 'Error:' : 'Status:'}</strong> ${escapeHtml(message)}`;
+      }
+
+      function clearStatus() {
+        status.hidden = true;
+        statusText.textContent = '';
+      }
+
+      function isValidYouTubeUrl(value) {
+        const lower = value.toLowerCase();
+        return lower.includes('youtube.com') || lower.includes('youtu.be');
+      }
+
+      function triggerDownload(url, format) {
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+        anchor.download = `yudown.${format === 'mp3' ? 'mp3' : 'mp4'}`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+      }
+
+      function escapeHtml(value) {
+        return value
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;');
+      }
+    </script>
+  </body>
+</html>

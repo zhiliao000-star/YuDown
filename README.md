@@ -1,126 +1,92 @@
 # YuDown
 
-YuDown is a minimal dark-themed web app for downloading YouTube videos as MP3 or MP4 using `yt-dlp`.
+YuDown is a minimalist YouTube downloader built for Vercel with a static `index.html` frontend and a free serverless proxy at `api/download.js`.
 
-## Stack
+## Architecture
 
-- Frontend: React + Vite + Tailwind CSS
-- Backend: Node.js + Express
-- Download engine: `yt-dlp`
+- Frontend: static HTML, CSS, and vanilla JavaScript
+- Backend: Vercel Serverless Function (`api/download.js`)
+- Upstream download provider: `https://api.cobalt.tools/`
 
-## Project Structure
+## Why this approach
 
-```text
-/client   React frontend
-/server   Express backend
-```
+As of April 21, 2026, older `ytdl-core` forks are a weak default for a fresh deployment. The `@distube/ytdl-core` repository is archived and explicitly says it will no longer be maintained. By contrast, cobalt.tools is still live and publicly documents browser-driven downloading flows and community processing instances.
 
-## Requirements
+This project therefore uses a lightweight Vercel function to validate input and forward requests to cobalt.tools, which is a better fit for Vercel Hobby.
 
-- Node.js 18+
-- Python 3
-- `yt-dlp`
-- `ffmpeg` for MP3 extraction and some video remuxing tasks
+## Files
 
-## Install yt-dlp
+- [index.html](/Users/zhiliao000/Documents/YuDown/index.html)
+- [api/download.js](/Users/zhiliao000/Documents/YuDown/api/download.js)
+- [vercel.json](/Users/zhiliao000/Documents/YuDown/vercel.json)
 
-Recommended:
+## Local usage
+
+Install:
 
 ```bash
-python3 -m pip install -U yt-dlp
-```
-
-Or on macOS with Homebrew:
-
-```bash
-brew install yt-dlp ffmpeg
-```
-
-Verify:
-
-```bash
-yt-dlp --version
-ffmpeg -version
-```
-
-## Setup
-
-Install backend dependencies:
-
-```bash
-cd server
 npm install
 ```
 
-Install frontend dependencies:
+Create the static build:
 
 ```bash
-cd ../client
-npm install
-```
-
-## Development
-
-Start the API:
-
-```bash
-cd server
-npm run dev
-```
-
-Start the frontend in another terminal:
-
-```bash
-cd client
-npm run dev
-```
-
-Frontend runs on `http://localhost:5173` by default.
-Backend runs on `http://localhost:3001` by default.
-
-## Production
-
-Build the frontend:
-
-```bash
-cd client
 npm run build
 ```
 
-Start the server:
+That writes the frontend to `dist/index.html`.
 
-```bash
-cd ../server
-npm start
-```
+## Deploy to Vercel
 
-## API
+1. Push the repo to GitHub.
+2. Import the project into Vercel.
+3. Keep the framework preset as `Other`.
+4. Build command: `npm run build`
+5. Output directory: `dist`
+6. Deploy.
 
-### `GET /api/health`
+Vercel will serve:
 
-Returns service status and whether `yt-dlp` is available.
+- the static frontend from `dist/`
+- the serverless endpoint from `api/download.js`
 
-### `POST /api/download`
+## Request flow
 
-Accepts JSON:
+1. User pastes a YouTube link.
+2. Frontend sends `POST /api/download` with:
 
 ```json
 {
-  "url": "https://www.youtube.com/watch?v=...",
+  "url": "https://www.youtube.com/watch?v=example",
   "format": "mp3",
-  "quality": "1080p"
+  "quality": "1080"
 }
 ```
 
-Response is Server-Sent Events. Progress events stream while `yt-dlp` runs. When complete, the server emits a final event containing a `downloadUrl` that the browser can use to fetch the generated file.
+3. The Vercel function forwards that to cobalt.tools as:
 
-### `GET /api/file/:id`
+```json
+{
+  "url": "https://www.youtube.com/watch?v=example",
+  "downloadMode": "audio",
+  "audioFormat": "mp3",
+  "videoQuality": "1080"
+}
+```
 
-Downloads the generated file once it is ready.
+4. The API responds with a direct file URL.
+5. The browser triggers the download through an anchor element.
 
 ## Notes
 
-- Temporary files are stored in `/tmp/tuberip/`
-- Rate limiting is set to `5 requests/minute per IP`
-- Downloaded temp files are deleted after the browser finishes downloading them
-- If cleanup after transfer fails, a fallback timer removes stale files automatically
+- No paid APIs are used.
+- This is intended to stay compatible with Vercel's free Hobby tier.
+- URL validation is basic and only checks for `youtube.com` or `youtu.be`.
+- Some videos may still fail because of upstream restrictions, private content, or provider-side changes.
+
+## Sources
+
+- [distubejs/ytdl-core on GitHub](https://github.com/distubejs/ytdl-core)
+- [cobalt.tools](https://cobalt.tools/)
+- [cobalt tools community page](https://cobalt.tools/about/community)
+- [cobalt tools instances page](https://cobalt.tools/settings/instances)
