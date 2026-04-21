@@ -77,6 +77,11 @@
   border-color: var(--border-soft);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(18px);
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    background-color 220ms ease;
 }
 
 .panel-subtle {
@@ -102,6 +107,11 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 12px 28px rgba(175, 114, 78, 0.08);
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease;
 }
 
 .search-bar::placeholder {
@@ -114,6 +124,7 @@
     0 0 0 5px rgba(223, 141, 103, 0.1),
     0 18px 42px rgba(178, 116, 80, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px) scale(1.003);
 }
 
 .search-hint {
@@ -129,13 +140,20 @@
   color: var(--muted);
   border: 1px solid var(--border-soft);
   background: rgba(255, 255, 255, 0.58);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    background-color 220ms ease,
+    color 220ms ease,
+    box-shadow 220ms ease;
 }
 
 .quick-chip:hover,
 .filter-chip:hover {
   color: var(--fg-soft);
   border-color: var(--border-strong);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.78);
+  transform: translateY(-1px);
 }
 
 .filter-chip-active {
@@ -152,15 +170,21 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.98),
     0 12px 24px rgba(175, 120, 85, 0.08);
+  transform-origin: center bottom;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 240ms ease,
+    background 240ms ease,
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tool-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px) scale(1.012);
   border-color: rgba(214, 128, 91, 0.18);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 244, 238, 0.82) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 1),
-    0 20px 40px rgba(181, 122, 89, 0.12);
+    0 24px 50px rgba(181, 122, 89, 0.14);
 }
 
 .tool-icon {
@@ -218,6 +242,25 @@
   animation: fadeUp 0.7s ease both;
 }
 
+.fade-up-soft {
+  animation: fadeUpSoft 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stagger-1 { animation-delay: 80ms; }
+.stagger-2 { animation-delay: 140ms; }
+.stagger-3 { animation-delay: 200ms; }
+.stagger-4 { animation-delay: 260ms; }
+
+.lift-hover:hover {
+  transform: translateY(-3px);
+}
+
+.glow-focus:focus-within {
+  box-shadow:
+    0 0 0 6px rgba(223, 141, 103, 0.08),
+    0 24px 48px rgba(192, 127, 89, 0.12);
+}
+
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -229,6 +272,17 @@
   }
 }
 
+@keyframes fadeUpSoft {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes floatSlow {
   0%,
   100% {
@@ -236,5 +290,24 @@
   }
   50% {
     transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .tool-card:hover,
+  .quick-chip:hover,
+  .filter-chip:hover,
+  .search-bar:focus,
+  .lift-hover:hover {
+    transform: none;
   }
 }

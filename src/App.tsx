@@ -298,7 +298,7 @@ const filterTools = (query: string, category: ToolCategory) => {
   });
 };
 
-const ToolCard = ({ tool }: { tool: ToolItem }) => {
+const ToolCard = ({ tool, index }: { tool: ToolItem; index: number }) => {
   const content = (
     <>
       <div className="flex items-start justify-between gap-3">
@@ -317,7 +317,7 @@ const ToolCard = ({ tool }: { tool: ToolItem }) => {
   );
 
   return (
-    <Link to={tool.path} className="tool-card">
+    <Link to={tool.path} className={cn('tool-card fade-up-soft', `stagger-${(index % 4) + 1}`)}>
       {content}
     </Link>
   );
@@ -344,7 +344,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
 
   return (
     <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-8')}>
-      <div className={cn('relative', !compact && 'fade-up')}>
+      <div className={cn('relative', !compact && 'fade-up-soft')}>
         {!compact && (
           <>
             <div className="hero-orb" />
@@ -403,8 +403,8 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {tools.map((tool) => (
-            <ToolCard key={tool.path} tool={tool} />
+          {tools.map((tool, index) => (
+            <ToolCard key={tool.path} tool={tool} index={index} />
           ))}
         </div>
 
