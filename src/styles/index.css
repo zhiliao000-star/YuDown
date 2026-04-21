@@ -1,25 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg: #07090d;
-  --bg-overlay: rgba(7, 9, 13, 0.76);
-  --surface: rgba(14, 18, 26, 0.82);
-  --surface-raised: rgba(18, 24, 35, 0.96);
-  --surface-soft: rgba(12, 16, 23, 0.72);
-  --fg: #eef2fb;
-  --fg-soft: #cfd8eb;
-  --muted: #95a2b7;
-  --muted-dim: #6f7b8f;
-  --border-soft: rgba(139, 162, 201, 0.14);
-  --border-strong: rgba(150, 178, 224, 0.24);
-  --accent-soft: #90b7ff;
-  --accent-glow: rgba(129, 165, 235, 0.18);
-  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.18);
-  --shadow-glow: 0 0 0 1px rgba(146, 177, 225, 0.05), 0 18px 50px rgba(0, 0, 0, 0.34);
+  --bg: #171112;
+  --bg-overlay: rgba(23, 17, 18, 0.72);
+  --surface: rgba(48, 34, 35, 0.34);
+  --surface-raised: rgba(255, 248, 243, 0.1);
+  --surface-soft: rgba(73, 47, 43, 0.22);
+  --fg: #fff4ee;
+  --fg-soft: #ffe0d0;
+  --muted: #d9b7a7;
+  --muted-dim: #b48f82;
+  --border-soft: rgba(255, 220, 201, 0.12);
+  --border-strong: rgba(255, 219, 194, 0.24);
+  --accent-soft: #ffd0ad;
+  --accent-strong: #ffb57c;
+  --accent-glow: rgba(255, 191, 141, 0.22);
+  --shadow-soft: 0 14px 40px rgba(19, 9, 8, 0.18);
+  --shadow-glow: 0 0 0 1px rgba(255, 219, 194, 0.04), 0 24px 60px rgba(24, 10, 8, 0.32);
   color-scheme: dark;
 }
 
@@ -36,12 +37,13 @@
 
   body {
     @apply antialiased;
-    font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
     color: var(--fg);
     background:
-      radial-gradient(circle at top, rgba(66, 93, 142, 0.16) 0%, rgba(66, 93, 142, 0) 28%),
-      radial-gradient(circle at 20% 20%, rgba(80, 106, 150, 0.08) 0%, rgba(80, 106, 150, 0) 24%),
-      linear-gradient(180deg, #090c12 0%, #06080c 100%);
+      radial-gradient(circle at 18% 12%, rgba(255, 185, 124, 0.18) 0%, rgba(255, 185, 124, 0) 28%),
+      radial-gradient(circle at 82% 8%, rgba(244, 120, 87, 0.16) 0%, rgba(244, 120, 87, 0) 24%),
+      radial-gradient(circle at 50% 100%, rgba(123, 49, 52, 0.22) 0%, rgba(123, 49, 52, 0) 30%),
+      linear-gradient(180deg, #221718 0%, #161011 56%, #120d0e 100%);
   }
 
   ::selection {
@@ -66,10 +68,11 @@
 }
 
 .panel {
-  @apply rounded-[24px] border;
+  @apply rounded-[28px] border;
   background: var(--surface);
   border-color: var(--border-soft);
   box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px);
 }
 
 .panel-subtle {
@@ -78,12 +81,7 @@
 }
 
 .hero-panel {
-  @apply rounded-[28px] border px-5 py-5 sm:px-6 sm:py-6;
-  background:
-    radial-gradient(circle at top right, rgba(137, 167, 228, 0.08) 0%, rgba(137, 167, 228, 0) 24%),
-    linear-gradient(180deg, rgba(16, 20, 28, 0.96) 0%, rgba(10, 13, 20, 0.98) 100%);
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-glow);
+  @apply relative;
 }
 
 .eyebrow {
@@ -92,11 +90,14 @@
 }
 
 .search-bar {
-  @apply h-14 w-full rounded-[18px] border bg-transparent pl-12 pr-16 text-[15px] outline-none transition;
-  border-color: var(--border-soft);
+  @apply h-16 w-full rounded-[24px] border bg-transparent pl-14 pr-16 text-[16px] outline-none transition;
+  border-color: rgba(255, 226, 208, 0.16);
   color: var(--fg);
-  background: rgba(9, 12, 18, 0.78);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  background:
+    linear-gradient(180deg, rgba(255, 249, 245, 0.08) 0%, rgba(255, 249, 245, 0.04) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 30px rgba(20, 8, 6, 0.14);
 }
 
 .search-bar::placeholder {
@@ -104,25 +105,26 @@
 }
 
 .search-bar:focus {
-  border-color: rgba(144, 183, 255, 0.34);
+  border-color: rgba(255, 204, 173, 0.38);
   box-shadow:
-    0 0 0 4px rgba(129, 165, 235, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 0 0 5px rgba(255, 190, 143, 0.08),
+    0 16px 44px rgba(31, 12, 9, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .search-hint {
   @apply absolute right-4 top-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-[10px];
   color: var(--muted-dim);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 246, 240, 0.05);
 }
 
 .quick-chip,
 .filter-chip {
-  @apply inline-flex items-center rounded-full px-3 py-1.5 text-xs transition;
+  @apply inline-flex items-center rounded-full px-3.5 py-2 text-xs transition;
   color: var(--muted);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 245, 238, 0.05);
 }
 
 .quick-chip:hover,
@@ -134,47 +136,101 @@
 
 .filter-chip-active {
   color: var(--fg);
-  border-color: rgba(144, 183, 255, 0.22);
-  background: rgba(144, 183, 255, 0.08);
-  box-shadow: 0 0 0 1px rgba(144, 183, 255, 0.04) inset;
+  border-color: rgba(255, 207, 175, 0.24);
+  background: linear-gradient(180deg, rgba(255, 221, 197, 0.14) 0%, rgba(255, 221, 197, 0.08) 100%);
+  box-shadow: 0 0 0 1px rgba(255, 220, 201, 0.04) inset;
 }
 
 .tool-card {
   @apply rounded-[22px] border p-4 transition;
   border-color: var(--border-soft);
-  background: linear-gradient(180deg, rgba(17, 22, 31, 0.84) 0%, rgba(11, 15, 21, 0.92) 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  background: linear-gradient(180deg, rgba(255, 245, 238, 0.08) 0%, rgba(255, 245, 238, 0.04) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 24px rgba(21, 8, 7, 0.12);
 }
 
 .tool-card:hover {
-  transform: translateY(-1px);
-  border-color: rgba(144, 183, 255, 0.22);
-  background: linear-gradient(180deg, rgba(18, 24, 35, 0.92) 0%, rgba(12, 16, 24, 0.98) 100%);
+  transform: translateY(-4px);
+  border-color: rgba(255, 212, 184, 0.24);
+  background: linear-gradient(180deg, rgba(255, 245, 238, 0.12) 0%, rgba(255, 245, 238, 0.06) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 20px 40px rgba(22, 8, 8, 0.16);
 }
 
 .tool-icon {
   @apply inline-flex h-9 w-9 items-center justify-center rounded-2xl;
   color: var(--fg-soft);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 248, 243, 0.06);
 }
 
 .trust-strip {
   @apply rounded-full px-4 py-2 text-center text-xs;
   color: var(--muted);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 248, 243, 0.04);
 }
 
 .empty-state {
   @apply rounded-[20px] border px-4 py-8 text-center text-sm;
   color: var(--muted);
   border-color: var(--border-soft);
-  background: rgba(255, 255, 255, 0.018);
+  background: rgba(255, 248, 243, 0.035);
 }
 
 .ad-container {
   @apply relative my-8 mx-auto w-full max-w-4xl overflow-hidden rounded-[20px] p-4;
   background: var(--surface-soft);
   border: 1px solid var(--border-soft);
+}
+
+.hero-orb {
+  position: absolute;
+  inset: auto auto -28px -36px;
+  width: 160px;
+  height: 160px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 207, 175, 0.24) 0%, rgba(255, 207, 175, 0) 70%);
+  filter: blur(10px);
+  pointer-events: none;
+  animation: floatSlow 9s ease-in-out infinite;
+}
+
+.hero-orb-right {
+  position: absolute;
+  inset: -18px -12px auto auto;
+  width: 140px;
+  height: 140px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 146, 110, 0.18) 0%, rgba(255, 146, 110, 0) 70%);
+  filter: blur(14px);
+  pointer-events: none;
+  animation: floatSlow 11s ease-in-out infinite reverse;
+}
+
+.fade-up {
+  animation: fadeUp 0.7s ease both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }

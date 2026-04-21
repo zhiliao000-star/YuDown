@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { MoonStar, Wrench } from 'lucide-react';
+import { Sparkles, Wrench } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const Header: React.FC = () => {
@@ -38,8 +38,8 @@ export const Header: React.FC = () => {
             ))}
           </nav>
           <span className="hidden items-center gap-1.5 rounded-full border border-[var(--border-soft)] bg-[var(--surface)] px-3 py-1.5 text-[11px] text-[var(--muted)] shadow-[var(--shadow-soft)] sm:inline-flex">
-            <MoonStar className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
-            Night mode
+            <Sparkles className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
+            Warm glow
           </span>
         </div>
       </div>
@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
         <div className="max-w-md">
           <p className="text-sm font-medium text-[var(--fg)]">YuTools</p>
           <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
-            Quiet browser utilities for files, images, and small technical tasks.
+            Simple browser utilities for files, images, and small technical tasks.
           </p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-[var(--muted)]">

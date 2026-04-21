@@ -163,20 +163,26 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
 
   return (
     <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-8')}>
-      <div className="hero-panel">
+      <div className={cn('relative', !compact && 'fade-up')}>
+        {!compact && (
+          <>
+            <div className="hero-orb" />
+            <div className="hero-orb-right" />
+          </>
+        )}
         {!compact && (
           <div className="max-w-[640px]">
             <p className="eyebrow">quiet utility workspace</p>
             <h1 className="mt-3 text-balance text-[28px] font-semibold leading-[1.05] text-[var(--fg)] sm:text-[38px]">
-              Minimal browser tools for late-night file work.
+              Gentle tools for files, images, and quick tasks.
             </h1>
             <p className="mt-3 max-w-[560px] text-sm leading-6 text-[var(--muted)]">
-              Search, open, drop a file, finish the task. No signup. No loud landing page.
+              Search, open, and finish the task with as little friction as possible.
             </p>
           </div>
         )}
 
-        <div className={cn('relative', compact ? 'mt-0' : 'mt-7')}>
+        <div className={cn('relative', compact ? 'mt-0' : 'mt-8')}>
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-dim)]" />
           <input
             ref={inputRef}
@@ -189,7 +195,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
         </div>
 
         {!compact && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             {QUICK_LAUNCH.map((label) => {
               const tool = TOOL_ITEMS.find((item) => item.name === label);
               if (!tool) return null;
@@ -203,7 +209,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
           </div>
         )}
 
-        <div className="mt-5 flex flex-wrap items-center gap-2">
+        <div className="mt-6 flex flex-wrap items-center gap-2">
           {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
             <button
               key={tab}
@@ -215,7 +221,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
           ))}
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {tools.map((tool) => (
             <ToolCard key={tool.path} tool={tool} />
           ))}
@@ -238,8 +244,8 @@ const HomePage = () => {
         Runs in your browser when possible. Quiet by default. No signup.
       </div>
 
-      <section className="mt-10 grid gap-4 md:grid-cols-[1.25fr_0.95fr]">
-        <article className="panel panel-subtle p-5">
+      <section className="mt-10 grid gap-4 md:grid-cols-[1.15fr_0.85fr]">
+        <article className="panel panel-subtle fade-up p-5">
           <p className="eyebrow">workflow</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
             <div>
@@ -257,7 +263,7 @@ const HomePage = () => {
           </div>
         </article>
 
-        <article className="panel panel-subtle p-5">
+        <article className="panel panel-subtle fade-up p-5">
           <p className="eyebrow">notes</p>
           <div className="mt-3 space-y-2 text-xs leading-5 text-[var(--muted)]">
             <p><span className="text-[var(--fg-soft)]">Privacy:</span> most supported tasks stay local.</p>
