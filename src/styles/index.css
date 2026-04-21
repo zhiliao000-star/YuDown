@@ -3,34 +3,88 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --bg: #07090d;
+  --surface: #0f131a;
+  --surface-2: #121821;
+  --surface-3: #1a2230;
+  --fg: #e7ecf7;
+  --muted: #9aa7bd;
+  --border: #273246;
+  --accent: #6aa8ff;
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: white;
+.dark {
+  --bg: #07090d;
+  --surface: #0f131a;
+  --surface-2: #121821;
+  --surface-3: #1a2230;
+  --fg: #e7ecf7;
+  --muted: #9aa7bd;
+  --border: #273246;
+  --accent: #6aa8ff;
+  color-scheme: dark;
 }
 
 @layer base {
+  html, body, #root {
+    min-height: 100%;
+  }
+
   body {
-    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-50;
+    @apply antialiased;
+    background: radial-gradient(circle at top, #0e1420 0%, var(--bg) 48%);
+    color: var(--fg);
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight text-slate-950 dark:text-slate-50 font-bold;
+    @apply font-semibold tracking-tight;
+    color: var(--fg);
   }
 }
 
 .ad-container {
-  @apply relative my-12 mx-auto w-full max-w-4xl overflow-hidden rounded-xl bg-slate-100/50 p-4 dark:bg-slate-900/10;
+  @apply relative my-8 mx-auto w-full max-w-4xl overflow-hidden rounded-lg p-4;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.panel {
+  @apply rounded-xl border p-4;
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.chip {
+  @apply inline-flex items-center rounded-md border px-2 py-1 text-xs transition;
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.chip:hover {
+  color: var(--fg);
+}
+
+.chip-active {
+  background: var(--surface-3);
+  color: var(--fg);
+}
+
+.tool-card {
+  @apply rounded-lg border p-3 transition;
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+.tool-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 48%, var(--border));
+  transform: translateY(-1px);
+}
+
+.trust-strip {
+  @apply rounded-lg border px-3 py-2 text-center text-xs;
+  border-color: var(--border);
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 88%, #ffffff 12%);
 }
