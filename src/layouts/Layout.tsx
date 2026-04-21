@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
         </Link>
 
         <div className="flex items-center gap-2">
-          <nav className="flex items-center gap-1 rounded-full border border-[var(--border-soft)] bg-[var(--surface)]/90 px-1.5 py-1 shadow-[var(--shadow-soft)]">
+          <nav className="flex items-center gap-1 rounded-full border border-[var(--border-soft)] bg-[var(--surface-raised)]/90 px-1.5 py-1 shadow-[var(--shadow-soft)]">
             {[
               ['Tools', '/tools'],
               ['About', '/about'],
@@ -26,9 +26,9 @@ export const Header: React.FC = () => {
                 to={href}
                 className={({ isActive }) =>
                   cn(
-                    'rounded-full px-3 py-1.5 text-[11px] transition-colors',
+            'rounded-full px-3 py-1.5 text-[11px] transition-colors',
                     isActive
-                      ? 'bg-[var(--surface-raised)] text-[var(--fg)]'
+                      ? 'bg-white text-[var(--fg)]'
                       : 'text-[var(--muted)] hover:text-[var(--fg-soft)]'
                   )
                 }
@@ -37,9 +37,9 @@ export const Header: React.FC = () => {
               </NavLink>
             ))}
           </nav>
-          <span className="hidden items-center gap-1.5 rounded-full border border-[var(--border-soft)] bg-[var(--surface)] px-3 py-1.5 text-[11px] text-[var(--muted)] shadow-[var(--shadow-soft)] sm:inline-flex">
+          <span className="hidden items-center gap-1.5 rounded-full border border-[var(--border-soft)] bg-[var(--surface-raised)] px-3 py-1.5 text-[11px] text-[var(--muted)] shadow-[var(--shadow-soft)] sm:inline-flex">
             <Sparkles className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
-            Warm glow
+            Soft light
           </span>
         </div>
       </div>

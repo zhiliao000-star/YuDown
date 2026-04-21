@@ -5,23 +5,23 @@
 @tailwind utilities;
 
 :root {
-  --bg: #171112;
-  --bg-overlay: rgba(23, 17, 18, 0.72);
-  --surface: rgba(48, 34, 35, 0.34);
-  --surface-raised: rgba(255, 248, 243, 0.1);
-  --surface-soft: rgba(73, 47, 43, 0.22);
-  --fg: #fff4ee;
-  --fg-soft: #ffe0d0;
-  --muted: #d9b7a7;
-  --muted-dim: #b48f82;
-  --border-soft: rgba(255, 220, 201, 0.12);
-  --border-strong: rgba(255, 219, 194, 0.24);
-  --accent-soft: #ffd0ad;
-  --accent-strong: #ffb57c;
-  --accent-glow: rgba(255, 191, 141, 0.22);
-  --shadow-soft: 0 14px 40px rgba(19, 9, 8, 0.18);
-  --shadow-glow: 0 0 0 1px rgba(255, 219, 194, 0.04), 0 24px 60px rgba(24, 10, 8, 0.32);
-  color-scheme: dark;
+  --bg: #fffaf5;
+  --bg-overlay: rgba(255, 250, 245, 0.82);
+  --surface: rgba(255, 255, 255, 0.7);
+  --surface-raised: rgba(255, 255, 255, 0.92);
+  --surface-soft: rgba(255, 245, 238, 0.74);
+  --fg: #2e2220;
+  --fg-soft: #563f3a;
+  --muted: #826863;
+  --muted-dim: #aa8f89;
+  --border-soft: rgba(186, 142, 126, 0.14);
+  --border-strong: rgba(193, 133, 103, 0.24);
+  --accent-soft: #df8d67;
+  --accent-strong: #c7644a;
+  --accent-glow: rgba(230, 150, 111, 0.18);
+  --shadow-soft: 0 18px 40px rgba(158, 104, 78, 0.08);
+  --shadow-glow: 0 0 0 1px rgba(255, 232, 221, 0.85), 0 24px 60px rgba(184, 123, 87, 0.12);
+  color-scheme: light;
 }
 
 @layer base {
@@ -40,14 +40,14 @@
     font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
     color: var(--fg);
     background:
-      radial-gradient(circle at 18% 12%, rgba(255, 185, 124, 0.18) 0%, rgba(255, 185, 124, 0) 28%),
-      radial-gradient(circle at 82% 8%, rgba(244, 120, 87, 0.16) 0%, rgba(244, 120, 87, 0) 24%),
-      radial-gradient(circle at 50% 100%, rgba(123, 49, 52, 0.22) 0%, rgba(123, 49, 52, 0) 30%),
-      linear-gradient(180deg, #221718 0%, #161011 56%, #120d0e 100%);
+      radial-gradient(circle at 14% 10%, rgba(255, 213, 170, 0.72) 0%, rgba(255, 213, 170, 0) 26%),
+      radial-gradient(circle at 84% 12%, rgba(255, 191, 176, 0.62) 0%, rgba(255, 191, 176, 0) 24%),
+      radial-gradient(circle at 50% 100%, rgba(255, 224, 208, 0.8) 0%, rgba(255, 224, 208, 0) 30%),
+      linear-gradient(180deg, #fffdf9 0%, #fff6f0 44%, #fffaf6 100%);
   }
 
   ::selection {
-    background: rgba(144, 183, 255, 0.18);
+    background: rgba(223, 141, 103, 0.2);
     color: var(--fg);
   }
 
@@ -77,7 +77,7 @@
 
 .panel-subtle {
   background: var(--surface-soft);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .hero-panel {
@@ -91,13 +91,13 @@
 
 .search-bar {
   @apply h-16 w-full rounded-[24px] border bg-transparent pl-14 pr-16 text-[16px] outline-none transition;
-  border-color: rgba(255, 226, 208, 0.16);
+  border-color: rgba(202, 149, 128, 0.18);
   color: var(--fg);
   background:
-    linear-gradient(180deg, rgba(255, 249, 245, 0.08) 0%, rgba(255, 249, 245, 0.04) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 249, 245, 0.84) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 10px 30px rgba(20, 8, 6, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 12px 28px rgba(175, 114, 78, 0.08);
 }
 
 .search-bar::placeholder {
@@ -105,18 +105,18 @@
 }
 
 .search-bar:focus {
-  border-color: rgba(255, 204, 173, 0.38);
+  border-color: rgba(214, 128, 91, 0.34);
   box-shadow:
-    0 0 0 5px rgba(255, 190, 143, 0.08),
-    0 16px 44px rgba(31, 12, 9, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 0 0 5px rgba(223, 141, 103, 0.1),
+    0 18px 42px rgba(178, 116, 80, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .search-hint {
   @apply absolute right-4 top-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-[10px];
   color: var(--muted-dim);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 246, 240, 0.05);
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .quick-chip,
@@ -124,7 +124,7 @@
   @apply inline-flex items-center rounded-full px-3.5 py-2 text-xs transition;
   color: var(--muted);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 245, 238, 0.05);
+  background: rgba(255, 255, 255, 0.58);
 }
 
 .quick-chip:hover,
@@ -136,48 +136,48 @@
 
 .filter-chip-active {
   color: var(--fg);
-  border-color: rgba(255, 207, 175, 0.24);
-  background: linear-gradient(180deg, rgba(255, 221, 197, 0.14) 0%, rgba(255, 221, 197, 0.08) 100%);
-  box-shadow: 0 0 0 1px rgba(255, 220, 201, 0.04) inset;
+  border-color: rgba(214, 128, 91, 0.2);
+  background: linear-gradient(180deg, rgba(255, 236, 224, 0.9) 0%, rgba(255, 245, 240, 0.76) 100%);
+  box-shadow: 0 0 0 1px rgba(255, 239, 231, 0.55) inset;
 }
 
 .tool-card {
   @apply rounded-[22px] border p-4 transition;
   border-color: var(--border-soft);
-  background: linear-gradient(180deg, rgba(255, 245, 238, 0.08) 0%, rgba(255, 245, 238, 0.04) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84) 0%, rgba(255, 248, 244, 0.72) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 24px rgba(21, 8, 7, 0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    0 12px 24px rgba(175, 120, 85, 0.08);
 }
 
 .tool-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 212, 184, 0.24);
-  background: linear-gradient(180deg, rgba(255, 245, 238, 0.12) 0%, rgba(255, 245, 238, 0.06) 100%);
+  border-color: rgba(214, 128, 91, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 244, 238, 0.82) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 20px 40px rgba(22, 8, 8, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 20px 40px rgba(181, 122, 89, 0.12);
 }
 
 .tool-icon {
   @apply inline-flex h-9 w-9 items-center justify-center rounded-2xl;
   color: var(--fg-soft);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 248, 243, 0.06);
+  background: rgba(255, 255, 255, 0.62);
 }
 
 .trust-strip {
   @apply rounded-full px-4 py-2 text-center text-xs;
   color: var(--muted);
   border: 1px solid var(--border-soft);
-  background: rgba(255, 248, 243, 0.04);
+  background: rgba(255, 255, 255, 0.56);
 }
 
 .empty-state {
   @apply rounded-[20px] border px-4 py-8 text-center text-sm;
   color: var(--muted);
   border-color: var(--border-soft);
-  background: rgba(255, 248, 243, 0.035);
+  background: rgba(255, 255, 255, 0.56);
 }
 
 .ad-container {
@@ -192,7 +192,7 @@
   width: 160px;
   height: 160px;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(255, 207, 175, 0.24) 0%, rgba(255, 207, 175, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 198, 151, 0.42) 0%, rgba(255, 198, 151, 0) 70%);
   filter: blur(10px);
   pointer-events: none;
   animation: floatSlow 9s ease-in-out infinite;
@@ -204,7 +204,7 @@
   width: 140px;
   height: 140px;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(255, 146, 110, 0.18) 0%, rgba(255, 146, 110, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 163, 135, 0.32) 0%, rgba(255, 163, 135, 0) 70%);
   filter: blur(14px);
   pointer-events: none;
   animation: floatSlow 11s ease-in-out infinite reverse;
