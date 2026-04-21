@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: white;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-50;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight text-slate-950 dark:text-slate-50 font-bold;
+  }
+}
+
+.ad-container {
+  @apply relative my-12 mx-auto w-full max-w-4xl overflow-hidden rounded-xl bg-slate-100/50 p-4 dark:bg-slate-900/10;
+}

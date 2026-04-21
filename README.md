@@ -1,101 +1,74 @@
-# YuDown
+# YuTools
 
-YuDown is a minimalist YouTube downloader built for Vercel with a static `index.html` frontend and a free serverless proxy at `api/download.js`.
+YuTools is a free, SEO-friendly, utility website built with Vite, React, and TypeScript. All tools process files locally in the browser to ensure maximum privacy and speed.
 
-## Architecture
+## Core Features
+- **Local processing**: No files are uploaded to our servers.
+- **Vite performance**: Fast load times and high Lighthouse scores.
+- **Cloudflare ready**: Optimized for Cloudflare Pages with Functions support.
+- **SEO Optimized**: Clean meta tags, descriptive slugs, and an auto-generated sitemap.
+- **Ad Support**: Design-friendly ad slot placeholders.
 
-- Frontend: static HTML, CSS, and vanilla JavaScript
-- Backend: Vercel Serverless Function (`api/download.js`)
-- Upstream download provider: configurable cobalt instance
+## Tools (v1)
+- JPG to PDF
+- Merge PDF
+- Compress Image
+- Resize Image
+- HEIC to JPG
+- WebP/PNG/JPG Converter
+- QR Code Generator
+- JSON Formatter
 
-## Why this approach
+## Tech Stack
+- **Framework**: [React](https://react.dev/) / [Vite](https://vitejs.dev/)
+- **Routing**: [React Router](https://reactrouter.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Libraries**:
+  - `pdf-lib`: PDF generation and merging
+  - `browser-image-compression`: Client-side image optimization
+  - `qrcode`: QR code generation
+  - `heic2any`: HEIC to JPEG conversion
 
-As of April 21, 2026, older `ytdl-core` forks are a weak default for a fresh deployment. The `@distube/ytdl-core` repository is archived and explicitly says it will no longer be maintained. By contrast, cobalt.tools is still live and publicly documents browser-driven downloading flows and community processing instances.
-
-This project therefore uses a lightweight Vercel function to validate input and forward requests to a cobalt-compatible instance, which is a better fit for Vercel Hobby.
-
-Important: as of April 21, 2026, the hosted `api.cobalt.tools` instance documents bot protection and authentication requirements for third-party API usage. In practice, it may return `error.api.auth.jwt.missing` unless you use an authorized instance or your own deployment.
-
-## Files
-
-- [index.html](/Users/zhiliao000/Documents/YuDown/index.html)
-- [api/download.js](/Users/zhiliao000/Documents/YuDown/api/download.js)
-- [vercel.json](/Users/zhiliao000/Documents/YuDown/vercel.json)
-
-## Local usage
-
-Install:
+## Development
 
 ```bash
+# Install dependencies
 npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview build
+npm run preview
 ```
 
-Create the static build:
+## Deployment to Cloudflare Pages
 
+### Option 1: Git Integration (Recommended)
+1. Push this repository to GitHub/GitLab.
+2. Connect your repository to Cloudflare Pages.
+3. Use the following settings:
+   - **Framework preset**: Vite
+   - **Build command**: `npm run build`
+   - **Build output directory**: `dist`
+   - **Environment variables**:
+     - `VITE_SHOW_ADS`: set to `true` if you want to enable ad placeholders
+
+### Option 2: Wrangler (Manual)
 ```bash
 npm run build
+npm run deploy:pages
 ```
 
-That writes the frontend to `dist/index.html`.
+## Project Structure
+- `/src/components`: Reusable UI components and ad slots.
+- `/src/pages`: Individual tool pages and guides.
+- `/src/lib`: Utilities and processing logic.
+- `/functions`: Cloudflare Pages Functions (sitemap.xml, robots.txt).
+- `/public`: Static assets.
 
-## Deploy to Vercel
-
-1. Push the repo to GitHub.
-2. Import the project into Vercel.
-3. Keep the framework preset as `Other`.
-4. Build command: `npm run build`
-5. Output directory: `dist`
-6. Add environment variables if you are using your own cobalt instance:
-
-```text
-COBALT_API_URL=https://your-cobalt-instance.example/
-COBALT_API_KEY=optional-api-key
-```
-
-7. Deploy.
-
-Vercel will serve:
-
-- the static frontend from `dist/`
-- the serverless endpoint from `api/download.js`
-
-## Request flow
-
-1. User pastes a YouTube link.
-2. Frontend sends `POST /api/download` with:
-
-```json
-{
-  "url": "https://www.youtube.com/watch?v=example",
-  "format": "mp3",
-  "quality": "1080"
-}
-```
-
-3. The Vercel function forwards that to cobalt.tools as:
-
-```json
-{
-  "url": "https://www.youtube.com/watch?v=example",
-  "downloadMode": "audio",
-  "audioFormat": "mp3",
-  "videoQuality": "1080"
-}
-```
-
-4. The API responds with a direct file URL.
-5. The browser triggers the download through an anchor element.
-
-## Notes
-
-- No paid APIs are used.
-- This is intended to stay compatible with Vercel's free Hobby tier.
-- URL validation is basic and only checks for `youtube.com` or `youtu.be`.
-- Some videos may still fail because of upstream restrictions, private content, provider-side changes, or cobalt instance authentication rules.
-
-## Sources
-
-- [distubejs/ytdl-core on GitHub](https://github.com/distubejs/ytdl-core)
-- [cobalt.tools](https://cobalt.tools/)
-- [cobalt tools community page](https://cobalt.tools/about/community)
-- [cobalt tools instances page](https://cobalt.tools/settings/instances)
+## License
+MIT
