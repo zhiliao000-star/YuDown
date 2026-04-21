@@ -6,13 +6,15 @@ YuDown is a minimalist YouTube downloader built for Vercel with a static `index.
 
 - Frontend: static HTML, CSS, and vanilla JavaScript
 - Backend: Vercel Serverless Function (`api/download.js`)
-- Upstream download provider: `https://api.cobalt.tools/`
+- Upstream download provider: configurable cobalt instance
 
 ## Why this approach
 
 As of April 21, 2026, older `ytdl-core` forks are a weak default for a fresh deployment. The `@distube/ytdl-core` repository is archived and explicitly says it will no longer be maintained. By contrast, cobalt.tools is still live and publicly documents browser-driven downloading flows and community processing instances.
 
-This project therefore uses a lightweight Vercel function to validate input and forward requests to cobalt.tools, which is a better fit for Vercel Hobby.
+This project therefore uses a lightweight Vercel function to validate input and forward requests to a cobalt-compatible instance, which is a better fit for Vercel Hobby.
+
+Important: as of April 21, 2026, the hosted `api.cobalt.tools` instance documents bot protection and authentication requirements for third-party API usage. In practice, it may return `error.api.auth.jwt.missing` unless you use an authorized instance or your own deployment.
 
 ## Files
 
@@ -43,7 +45,14 @@ That writes the frontend to `dist/index.html`.
 3. Keep the framework preset as `Other`.
 4. Build command: `npm run build`
 5. Output directory: `dist`
-6. Deploy.
+6. Add environment variables if you are using your own cobalt instance:
+
+```text
+COBALT_API_URL=https://your-cobalt-instance.example/
+COBALT_API_KEY=optional-api-key
+```
+
+7. Deploy.
 
 Vercel will serve:
 
@@ -82,7 +91,7 @@ Vercel will serve:
 - No paid APIs are used.
 - This is intended to stay compatible with Vercel's free Hobby tier.
 - URL validation is basic and only checks for `youtube.com` or `youtu.be`.
-- Some videos may still fail because of upstream restrictions, private content, or provider-side changes.
+- Some videos may still fail because of upstream restrictions, private content, provider-side changes, or cobalt instance authentication rules.
 
 ## Sources
 

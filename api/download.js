@@ -1,4 +1,5 @@
-const COBALT_API_URL = 'https://api.cobalt.tools/';
+const COBALT_API_URL = process.env.COBALT_API_URL || 'https://api.cobalt.tools/';
+const COBALT_API_KEY = process.env.COBALT_API_KEY || '';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,6 +34,7 @@ export default async function handler(req, res) {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(COBALT_API_KEY ? { Authorization: `Api-Key ${COBALT_API_KEY}` } : {}),
       },
       body: JSON.stringify({
         url,
@@ -44,8 +46,9 @@ export default async function handler(req, res) {
 
     const payload = await cobaltResponse.json().catch(() => ({}));
 
-    if (!cobaltResponse.ok) {
-      return res.status(cobaltResponse.status).json({
+    if (!cobaltResponse.ok || payload?.status === 'error') {
+      const errorStatus = cobaltResponse.ok ? 502 : cobaltResponse.status;
+      return res.status(errorStatus).json({
         error: readProviderError(payload),
       });
     }
@@ -88,12 +91,26 @@ function isValidYouTubeUrl(value) {
 }
 
 function readProviderError(payload) {
+  const code = payload?.error?.code;
+
+  if (code === 'error.api.auth.jwt.missing' || code === 'error.api.auth.api-key.missing') {
+    return 'The configured cobalt instance requires authentication. The public api.cobalt.tools instance no longer works as an open drop-in backend for third-party apps.';
+  }
+
+  if (code === 'error.api.fetch.empty' || code === 'error.api.fetch.fail') {
+    return 'The download provider could not fetch this video right now. Try another video or another cobalt instance.';
+  }
+
+  if (code === 'error.api.content.video.unavailable') {
+    return 'This video is unavailable, private, region-locked, or blocked by the provider.';
+  }
+
   if (typeof payload?.error === 'string') {
     return payload.error;
   }
 
-  if (typeof payload?.error?.code === 'string') {
-    return `Upstream error: ${payload.error.code}.`;
+  if (typeof code === 'string') {
+    return `Upstream error: ${code}.`;
   }
 
   if (typeof payload?.text === 'string') {
