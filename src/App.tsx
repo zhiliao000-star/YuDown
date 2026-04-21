@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import {
-  ArrowRight,
+  ArrowUpRight,
   Binary,
   FileArchive,
   FileCode2,
   FileStack,
-  Filter,
   Image as ImageIcon,
   Minimize2,
   QrCode,
@@ -34,7 +33,7 @@ const TOOL_ITEMS: ToolItem[] = [
   {
     name: 'JPG to PDF',
     path: '/tools/jpg-to-pdf',
-    description: 'Combine JPG or PNG images into one PDF.',
+    description: 'Turn a batch of images into one clean PDF.',
     category: 'PDF',
     icon: FileStack,
     available: true,
@@ -42,7 +41,7 @@ const TOOL_ITEMS: ToolItem[] = [
   {
     name: 'Merge PDF',
     path: '/tools/merge-pdf',
-    description: 'Join multiple PDF files in sequence.',
+    description: 'Join PDFs in the order you choose.',
     category: 'PDF',
     icon: FileArchive,
     available: false,
@@ -50,7 +49,7 @@ const TOOL_ITEMS: ToolItem[] = [
   {
     name: 'Compress Image',
     path: '/tools/compress-image',
-    description: 'Shrink image size while preserving quality.',
+    description: 'Reduce file size without needless noise.',
     category: 'Image',
     icon: Minimize2,
     available: true,
@@ -58,7 +57,7 @@ const TOOL_ITEMS: ToolItem[] = [
   {
     name: 'Resize Image',
     path: '/tools/resize-image',
-    description: 'Change width and height quickly.',
+    description: 'Change image dimensions with precision.',
     category: 'Image',
     icon: ImageIcon,
     available: false,
@@ -82,7 +81,7 @@ const TOOL_ITEMS: ToolItem[] = [
   {
     name: 'Image Converter',
     path: '/tools/image-converter',
-    description: 'Convert between JPG, PNG, WebP.',
+    description: 'Convert between JPG, PNG, and WebP.',
     category: 'Image',
     icon: WandSparkles,
     available: false,
@@ -97,20 +96,20 @@ const TOOL_ITEMS: ToolItem[] = [
   },
 ];
 
-const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'QR Code', 'JSON Formatter'];
+const QUICK_LAUNCH = ['JPG to PDF', 'Compress Image', 'QR Code'];
 
 const filterTools = (query: string, category: ToolCategory) => {
   const q = query.trim().toLowerCase();
 
   return TOOL_ITEMS.filter((tool) => {
-    const categoryMatch = category === 'All' || tool.category === category;
-    const queryMatch =
+    const matchesCategory = category === 'All' || tool.category === category;
+    const matchesQuery =
       q.length === 0 ||
       tool.name.toLowerCase().includes(q) ||
       tool.description.toLowerCase().includes(q) ||
       tool.category.toLowerCase().includes(q);
 
-    return categoryMatch && queryMatch;
+    return matchesCategory && matchesQuery;
   });
 };
 
@@ -118,22 +117,22 @@ const ToolCard = ({ tool }: { tool: ToolItem }) => {
   const content = (
     <>
       <div className="flex items-start justify-between gap-3">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface-2)] text-[var(--accent)]">
+        <span className="tool-icon">
           <tool.icon className="h-4 w-4" />
         </span>
-        <span className="text-[11px] uppercase tracking-wide text-[var(--muted)]">{tool.category}</span>
+        <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-dim)]">{tool.category}</span>
       </div>
-      <h3 className="mt-3 text-sm font-semibold text-[var(--fg)]">{tool.name}</h3>
-      <p className="mt-1 text-xs text-[var(--muted)]">{tool.description}</p>
-      <div className="mt-3 inline-flex items-center gap-1 text-xs text-[var(--accent)]">
-        <span>{tool.available ? 'Open tool' : 'Planned'}</span>
-        <ArrowRight className="h-3 w-3" />
+      <h3 className="mt-4 text-sm font-medium text-[var(--fg)]">{tool.name}</h3>
+      <p className="mt-1.5 text-xs leading-5 text-[var(--muted)]">{tool.description}</p>
+      <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[var(--fg-soft)]">
+        <span>{tool.available ? 'Open' : 'Soon'}</span>
+        <ArrowUpRight className="h-3 w-3" />
       </div>
     </>
   );
 
   if (!tool.available) {
-    return <div className="tool-card opacity-60">{content}</div>;
+    return <div className="tool-card opacity-50">{content}</div>;
   }
 
   return (
@@ -163,83 +162,67 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
   const tools = filterTools(query, category);
 
   return (
-    <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-6')}>
-      <div className="panel">
+    <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-8')}>
+      <div className="hero-panel">
         {!compact && (
-          <>
-            <h1 className="text-balance text-[22px] font-semibold leading-tight text-[var(--fg)] sm:text-[28px]">
-              Fast browser-based tools for files, images, and quick tasks.
+          <div className="max-w-[640px]">
+            <p className="eyebrow">quiet utility workspace</p>
+            <h1 className="mt-3 text-balance text-[28px] font-semibold leading-[1.05] text-[var(--fg)] sm:text-[38px]">
+              Minimal browser tools for late-night file work.
             </h1>
-            <p className="mt-2 text-sm text-[var(--muted)]">
-              Pick a tool, drop your file, and finish in seconds. No account and minimal friction.
+            <p className="mt-3 max-w-[560px] text-sm leading-6 text-[var(--muted)]">
+              Search, open, drop a file, finish the task. No signup. No loud landing page.
             </p>
-          </>
+          </div>
         )}
 
-        <div className={cn(compact ? 'mt-0' : 'mt-5')}>
-          <label htmlFor="tool-search" className="sr-only">
-            Search tools
-          </label>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
-            <input
-              id="tool-search"
-              ref={inputRef}
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search tools..."
-              className="h-11 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] pl-10 pr-20 text-sm text-[var(--fg)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded border border-[var(--border)] bg-[var(--surface-2)] px-1.5 py-0.5 text-[10px] text-[var(--muted)]">
-              /
-            </span>
-          </div>
+        <div className={cn('relative', compact ? 'mt-0' : 'mt-7')}>
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-dim)]" />
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search tools"
+            className="search-bar"
+          />
+          <span className="search-hint">/</span>
         </div>
 
         {!compact && (
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             {QUICK_LAUNCH.map((label) => {
               const tool = TOOL_ITEMS.find((item) => item.name === label);
               if (!tool) return null;
-              return tool.available ? (
-                <Link key={label} to={tool.path} className="chip">
+
+              return (
+                <Link key={label} to={tool.path} className="quick-chip">
                   {label}
                 </Link>
-              ) : (
-                <span key={label} className="chip opacity-60">
-                  {label}
-                </span>
               );
             })}
           </div>
         )}
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-[var(--muted)]">
-            <Filter className="h-3.5 w-3.5" />
-            Category
-          </span>
+        <div className="mt-5 flex flex-wrap items-center gap-2">
           {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setCategory(tab)}
-              className={cn('chip', category === tab && 'chip-active')}
+              className={cn('filter-chip', category === tab && 'filter-chip-active')}
             >
               {tab}
             </button>
           ))}
         </div>
 
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {tools.map((tool) => (
             <ToolCard key={tool.path} tool={tool} />
           ))}
         </div>
 
         {tools.length === 0 && (
-          <div className="mt-4 rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] px-4 py-6 text-center text-sm text-[var(--muted)]">
-            No tools matched your search.
-          </div>
+          <div className="empty-state mt-5">No tools matched your search.</div>
         )}
       </div>
     </section>
@@ -248,27 +231,38 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
 
 const HomePage = () => {
   return (
-    <main className="mx-auto w-full max-w-[1100px] px-4 pb-8 pt-6 sm:px-5">
+    <main className="mx-auto w-full max-w-[1100px] px-4 pb-10 pt-6 sm:px-5">
       <Launcher />
 
-      <div className="trust-strip mt-4">Runs in your browser when possible. No signup.</div>
+      <div className="trust-strip mt-4">
+        Runs in your browser when possible. Quiet by default. No signup.
+      </div>
 
-      <section className="mt-8 grid gap-4 md:grid-cols-2">
-        <article className="panel p-4">
-          <h2 className="text-sm font-semibold text-[var(--fg)]">How it works</h2>
-          <ol className="mt-2 space-y-1.5 text-xs text-[var(--muted)]">
-            <li>1. Search and open a tool.</li>
-            <li>2. Drop your file or input text.</li>
-            <li>3. Process instantly in your browser.</li>
-            <li>4. Download or copy the result.</li>
-          </ol>
+      <section className="mt-10 grid gap-4 md:grid-cols-[1.25fr_0.95fr]">
+        <article className="panel panel-subtle p-5">
+          <p className="eyebrow">workflow</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            <div>
+              <p className="text-sm text-[var(--fg-soft)]">Find</p>
+              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">Search by task, not by marketing category.</p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--fg-soft)]">Run</p>
+              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">Open the tool and act immediately.</p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--fg-soft)]">Leave</p>
+              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">Download the result and move on.</p>
+            </div>
+          </div>
         </article>
-        <article className="panel p-4">
-          <h2 className="text-sm font-semibold text-[var(--fg)]">FAQ</h2>
-          <div className="mt-2 space-y-2 text-xs text-[var(--muted)]">
-            <p><span className="text-[var(--fg)]">Is it private?</span> Most tools run locally, so files stay on your device.</p>
-            <p><span className="text-[var(--fg)]">Do I need an account?</span> No. Open the tool and start immediately.</p>
-            <p><span className="text-[var(--fg)]">Mobile support?</span> Yes, recent iOS and Android browsers work.</p>
+
+        <article className="panel panel-subtle p-5">
+          <p className="eyebrow">notes</p>
+          <div className="mt-3 space-y-2 text-xs leading-5 text-[var(--muted)]">
+            <p><span className="text-[var(--fg-soft)]">Privacy:</span> most supported tasks stay local.</p>
+            <p><span className="text-[var(--fg-soft)]">Works fast:</span> the interface stays compact and direct.</p>
+            <p><span className="text-[var(--fg-soft)]">Best used:</span> when you need one utility, right now.</p>
           </div>
         </article>
       </section>
@@ -278,10 +272,10 @@ const HomePage = () => {
 
 const ToolsPage = () => {
   return (
-    <main className="mx-auto w-full max-w-[1100px] px-4 pb-8 pt-6 sm:px-5">
-      <div className="mb-3">
-        <h1 className="text-lg font-semibold text-[var(--fg)]">All tools</h1>
-        <p className="text-sm text-[var(--muted)]">Find and launch a task without scrolling through marketing content.</p>
+    <main className="mx-auto w-full max-w-[1100px] px-4 pb-10 pt-6 sm:px-5">
+      <div className="mx-auto max-w-[920px]">
+        <p className="eyebrow">tool library</p>
+        <h1 className="mt-2 text-[22px] font-semibold text-[var(--fg)]">Choose a tool and start.</h1>
       </div>
       <Launcher compact />
     </main>
@@ -289,23 +283,26 @@ const ToolsPage = () => {
 };
 
 const AboutPage = () => (
-  <main className="mx-auto w-full max-w-[920px] px-4 pb-8 pt-6 sm:px-5">
-    <section className="panel p-5">
-      <h1 className="text-lg font-semibold text-[var(--fg)]">About YuTools</h1>
-      <p className="mt-2 text-sm text-[var(--muted)]">
-        YuTools is a compact utility workspace for everyday file and text tasks. The product is designed for speed,
-        privacy, and direct interaction instead of marketing-heavy pages.
+  <main className="mx-auto w-full max-w-[920px] px-4 pb-10 pt-6 sm:px-5">
+    <section className="panel panel-subtle p-6">
+      <p className="eyebrow">about</p>
+      <h1 className="mt-2 text-[22px] font-semibold text-[var(--fg)]">Built to feel calm, direct, and useful.</h1>
+      <p className="mt-3 max-w-[680px] text-sm leading-6 text-[var(--muted)]">
+        YuTools is a compact collection of browser utilities for files, images, and quick technical tasks. The goal is
+        to remove friction, not add brand noise.
       </p>
     </section>
   </main>
 );
 
 const PrivacyPage = () => (
-  <main className="mx-auto w-full max-w-[920px] px-4 pb-8 pt-6 sm:px-5">
-    <section className="panel p-5">
-      <h1 className="text-lg font-semibold text-[var(--fg)]">Privacy</h1>
-      <p className="mt-2 text-sm text-[var(--muted)]">
-        YuTools prefers browser-side processing. For supported tools, files stay on your device and are not uploaded.
+  <main className="mx-auto w-full max-w-[920px] px-4 pb-10 pt-6 sm:px-5">
+    <section className="panel panel-subtle p-6">
+      <p className="eyebrow">privacy</p>
+      <h1 className="mt-2 text-[22px] font-semibold text-[var(--fg)]">Local-first whenever the tool allows it.</h1>
+      <p className="mt-3 max-w-[680px] text-sm leading-6 text-[var(--muted)]">
+        For supported tools, files are processed in your browser and never uploaded. YuTools aims for minimal handling,
+        minimal retention, and minimal friction.
       </p>
     </section>
   </main>
@@ -328,10 +325,10 @@ const App = () => {
           <Route
             path="*"
             element={
-              <main className="mx-auto w-full max-w-[920px] px-4 pb-8 pt-6 sm:px-5">
-                <div className="panel p-6 text-center">
+              <main className="mx-auto w-full max-w-[920px] px-4 pb-10 pt-6 sm:px-5">
+                <div className="panel panel-subtle p-6 text-center">
                   <h1 className="text-lg font-semibold text-[var(--fg)]">Page not found</h1>
-                  <Link to="/tools" className="mt-3 inline-flex text-sm text-[var(--accent)] hover:opacity-90">
+                  <Link to="/tools" className="mt-3 inline-flex text-sm text-[var(--fg-soft)] hover:text-[var(--fg)]">
                     Back to tools
                   </Link>
                 </div>

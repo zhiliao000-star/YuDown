@@ -1,54 +1,21 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Moon, Sun, Wrench } from 'lucide-react';
+import { MoonStar, Wrench } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const STORAGE_KEY = 'yutools-theme';
-
-type Theme = 'dark' | 'light';
-
-const applyTheme = (theme: Theme) => {
-  const root = document.documentElement;
-  root.classList.toggle('dark', theme === 'dark');
-  root.style.colorScheme = theme;
-};
-
 export const Header: React.FC = () => {
-  const [theme, setTheme] = React.useState<Theme>('dark');
-
-  React.useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    if (stored === 'dark' || stored === 'light') {
-      setTheme(stored);
-      applyTheme(stored);
-      return;
-    }
-
-    const preferredDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const resolvedTheme: Theme = preferredDark ? 'dark' : 'light';
-    setTheme(resolvedTheme);
-    applyTheme(resolvedTheme);
-  }, []);
-
-  const toggleTheme = () => {
-    const nextTheme: Theme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem(STORAGE_KEY, nextTheme);
-    applyTheme(nextTheme);
-  };
-
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/92 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-[var(--border-soft)] bg-[color:var(--bg-overlay)] backdrop-blur-xl">
       <div className="mx-auto flex h-14 w-full max-w-[1100px] items-center justify-between px-4 sm:px-5">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-[var(--fg)]">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface-2)] text-[var(--accent)]">
-            <Wrench className="h-3.5 w-3.5" />
+        <Link to="/" className="inline-flex items-center gap-2.5 text-sm font-medium tracking-[0.02em] text-[var(--fg)]">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--border-soft)] bg-[var(--surface-raised)] shadow-[var(--shadow-soft)]">
+            <Wrench className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
           </span>
-          <span>YuTools</span>
+          <span className="text-[15px] font-semibold tracking-tight">YuTools</span>
         </Link>
 
         <div className="flex items-center gap-2">
-          <nav className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-1">
+          <nav className="flex items-center gap-1 rounded-full border border-[var(--border-soft)] bg-[var(--surface)]/90 px-1.5 py-1 shadow-[var(--shadow-soft)]">
             {[
               ['Tools', '/tools'],
               ['About', '/about'],
@@ -59,10 +26,10 @@ export const Header: React.FC = () => {
                 to={href}
                 className={({ isActive }) =>
                   cn(
-                    'rounded-md px-2.5 py-1 text-xs transition-colors',
+                    'rounded-full px-3 py-1.5 text-[11px] transition-colors',
                     isActive
-                      ? 'bg-[var(--surface-3)] text-[var(--fg)]'
-                      : 'text-[var(--muted)] hover:text-[var(--fg)]'
+                      ? 'bg-[var(--surface-raised)] text-[var(--fg)]'
+                      : 'text-[var(--muted)] hover:text-[var(--fg-soft)]'
                   )
                 }
               >
@@ -70,14 +37,10 @@ export const Header: React.FC = () => {
               </NavLink>
             ))}
           </nav>
-          <button
-            onClick={toggleTheme}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] transition hover:text-[var(--fg)]"
-            aria-label="Toggle theme"
-            title="Toggle theme"
-          >
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
+          <span className="hidden items-center gap-1.5 rounded-full border border-[var(--border-soft)] bg-[var(--surface)] px-3 py-1.5 text-[11px] text-[var(--muted)] shadow-[var(--shadow-soft)] sm:inline-flex">
+            <MoonStar className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
+            Night mode
+          </span>
         </div>
       </div>
     </header>
@@ -86,23 +49,24 @@ export const Header: React.FC = () => {
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-14 border-t border-[var(--border)]">
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6 px-4 py-8 sm:px-5 md:flex-row md:items-start md:justify-between">
-        <div>
-          <p className="text-sm font-semibold text-[var(--fg)]">YuTools</p>
-          <p className="mt-1 max-w-md text-xs text-[var(--muted)]">Compact browser utilities for files, images, and quick technical tasks.</p>
+    <footer className="mt-16 border-t border-[var(--border-soft)]">
+      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6 px-4 py-8 sm:px-5 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-md">
+          <p className="text-sm font-medium text-[var(--fg)]">YuTools</p>
+          <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+            Quiet browser utilities for files, images, and small technical tasks.
+          </p>
         </div>
-        <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-xs text-[var(--muted)]">
-          <Link to="/tools" className="hover:text-[var(--fg)]">All tools</Link>
-          <Link to="/about" className="hover:text-[var(--fg)]">About</Link>
-          <Link to="/tools/jpg-to-pdf" className="hover:text-[var(--fg)]">JPG to PDF</Link>
-          <Link to="/privacy" className="hover:text-[var(--fg)]">Privacy</Link>
-          <Link to="/tools/compress-image" className="hover:text-[var(--fg)]">Compress Image</Link>
-          <Link to="/tools/qr-code-generator" className="hover:text-[var(--fg)]">QR Code</Link>
+        <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-[var(--muted)]">
+          <Link to="/tools" className="hover:text-[var(--fg-soft)]">All tools</Link>
+          <Link to="/tools/jpg-to-pdf" className="hover:text-[var(--fg-soft)]">JPG to PDF</Link>
+          <Link to="/tools/compress-image" className="hover:text-[var(--fg-soft)]">Compress Image</Link>
+          <Link to="/tools/qr-code-generator" className="hover:text-[var(--fg-soft)]">QR Code</Link>
+          <Link to="/privacy" className="hover:text-[var(--fg-soft)]">Privacy</Link>
         </div>
       </div>
-      <div className="mx-auto w-full max-w-[1100px] px-4 pb-8 text-[11px] text-[var(--muted)] sm:px-5">
-        © {new Date().getFullYear()} YuTools. Runs locally where possible.
+      <div className="mx-auto w-full max-w-[1100px] px-4 pb-8 text-[11px] text-[var(--muted-dim)] sm:px-5">
+        © {new Date().getFullYear()} YuTools. Local-first when possible.
       </div>
     </footer>
   );
