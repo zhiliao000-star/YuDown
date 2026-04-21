@@ -48,6 +48,7 @@
       radial-gradient(circle at 84% 12%, rgba(255, 191, 176, 0.62) 0%, rgba(255, 191, 176, 0) 24%),
       radial-gradient(circle at 50% 100%, rgba(255, 224, 208, 0.8) 0%, rgba(255, 224, 208, 0) 30%),
       linear-gradient(180deg, #fffdf9 0%, #fff6f0 44%, #fffaf6 100%);
+    background-attachment: fixed;
   }
 
   ::selection {
@@ -77,11 +78,23 @@
   border-color: var(--border-soft);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(18px);
+  position: relative;
+  overflow: hidden;
   transition:
     transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 220ms ease,
     background-color 220ms ease;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.16), transparent 28%, transparent 72%, rgba(255, 255, 255, 0.12));
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 .panel-subtle {
@@ -112,6 +125,7 @@
     border-color 220ms ease,
     box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 220ms ease;
+  animation: searchBreath 6s ease-in-out infinite;
 }
 
 .search-bar::placeholder {
@@ -154,6 +168,7 @@
   border-color: var(--border-strong);
   background: rgba(255, 255, 255, 0.78);
   transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(195, 131, 95, 0.1);
 }
 
 .filter-chip-active {
@@ -171,11 +186,26 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.98),
     0 12px 24px rgba(175, 120, 85, 0.08);
   transform-origin: center bottom;
+  position: relative;
+  overflow: hidden;
   transition:
     transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 240ms ease,
     background 240ms ease,
     box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tool-card::after {
+  content: '';
+  position: absolute;
+  inset: -20% auto auto -40%;
+  width: 52%;
+  height: 180%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0));
+  transform: rotate(18deg);
+  opacity: 0;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease;
+  pointer-events: none;
 }
 
 .tool-card:hover {
@@ -185,6 +215,11 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 1),
     0 24px 50px rgba(181, 122, 89, 0.14);
+}
+
+.tool-card:hover::after {
+  opacity: 1;
+  transform: translateX(220%) rotate(18deg);
 }
 
 .tool-icon {
@@ -223,7 +258,7 @@
   background: radial-gradient(circle, rgba(255, 198, 151, 0.42) 0%, rgba(255, 198, 151, 0) 70%);
   filter: blur(10px);
   pointer-events: none;
-  animation: floatSlow 9s ease-in-out infinite;
+  animation: floatSlow 9s ease-in-out infinite, pulseGlow 7s ease-in-out infinite;
 }
 
 .hero-orb-right {
@@ -235,7 +270,7 @@
   background: radial-gradient(circle, rgba(255, 163, 135, 0.32) 0%, rgba(255, 163, 135, 0) 70%);
   filter: blur(14px);
   pointer-events: none;
-  animation: floatSlow 11s ease-in-out infinite reverse;
+  animation: floatSlow 11s ease-in-out infinite reverse, pulseGlow 8s ease-in-out infinite reverse;
 }
 
 .fade-up {
@@ -246,10 +281,16 @@
   animation: fadeUpSoft 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.hero-reveal {
+  animation: heroReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .stagger-1 { animation-delay: 80ms; }
 .stagger-2 { animation-delay: 140ms; }
 .stagger-3 { animation-delay: 200ms; }
 .stagger-4 { animation-delay: 260ms; }
+.stagger-5 { animation-delay: 320ms; }
+.stagger-6 { animation-delay: 380ms; }
 
 .lift-hover:hover {
   transform: translateY(-3px);
@@ -283,6 +324,19 @@
   }
 }
 
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
 @keyframes floatSlow {
   0%,
   100% {
@@ -290,6 +344,32 @@
   }
   50% {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.88;
+    filter: blur(12px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(18px);
+  }
+}
+
+@keyframes searchBreath {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 12px 28px rgba(175, 114, 78, 0.08);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      0 18px 34px rgba(201, 130, 92, 0.12);
   }
 }
 

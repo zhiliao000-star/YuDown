@@ -23,7 +23,7 @@ export const ToolPageShell = ({
           <p className="eyebrow">{eyebrow}</p>
           <h1 className="mt-2 text-[24px] font-semibold text-[var(--fg)] sm:text-[30px]">{title}</h1>
           <p className="mt-2 max-w-[680px] text-sm leading-6 text-[var(--muted)]">{description}</p>
-          <div className="mt-6">{children}</div>
+          <div className="mt-6 fade-up-soft stagger-2">{children}</div>
         </section>
         <aside className="space-y-4">
           {aside}

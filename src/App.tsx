@@ -317,7 +317,7 @@ const ToolCard = ({ tool, index }: { tool: ToolItem; index: number }) => {
   );
 
   return (
-    <Link to={tool.path} className={cn('tool-card fade-up-soft', `stagger-${(index % 4) + 1}`)}>
+    <Link to={tool.path} className={cn('tool-card fade-up-soft', `stagger-${(index % 6) + 1}`)}>
       {content}
     </Link>
   );
@@ -344,7 +344,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
 
   return (
     <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-8')}>
-      <div className={cn('relative', !compact && 'fade-up-soft')}>
+      <div className={cn('relative', !compact && 'hero-reveal')}>
         {!compact && (
           <>
             <div className="hero-orb" />
@@ -376,7 +376,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
         </div>
 
         {!compact && (
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2 fade-up-soft stagger-2">
             {QUICK_LAUNCH.map((label) => {
               const tool = TOOL_ITEMS.find((item) => item.name === label);
               if (!tool) return null;
@@ -390,7 +390,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
           </div>
         )}
 
-        <div className="mt-6 flex flex-wrap items-center gap-2">
+        <div className="mt-6 flex flex-wrap items-center gap-2 fade-up-soft stagger-3">
           {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
             <button
               key={tab}
