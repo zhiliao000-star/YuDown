@@ -13,14 +13,34 @@ import {
   WandSparkles,
 } from 'lucide-react';
 import { Header, Footer } from './layouts/Layout';
+import { AddPageNumbersToPDF } from './pages/tools/AddPageNumbersToPDF';
 import { Base64Tool } from './pages/tools/Base64Tool';
+import { BlurRedactImage } from './pages/tools/BlurRedactImage';
+import { CompressPDF } from './pages/tools/CompressPDF';
 import { CompressImage } from './pages/tools/CompressImage';
+import { CropImage } from './pages/tools/CropImage';
+import { HEICToJPG } from './pages/tools/HEICToJPG';
 import { ImageConverter } from './pages/tools/ImageConverter';
 import { JSONFormatter } from './pages/tools/JSONFormatter';
 import { JPGToPDF } from './pages/tools/JPGToPDF';
 import { MergePDF } from './pages/tools/MergePDF';
+import { OCRPDF } from './pages/tools/OCRPDF';
+import { PDFProtectUnlock } from './pages/tools/PDFProtectUnlock';
+import { PDFToJPG } from './pages/tools/PDFToJPG';
+import { PNGToSVG } from './pages/tools/PNGToSVG';
+import { QRCodeScanner } from './pages/tools/QRCodeScanner';
 import { QRCodeGenerator } from './pages/tools/QRCodeGenerator';
+import { ReorderPDFPages } from './pages/tools/ReorderPDFPages';
 import { ResizeImage } from './pages/tools/ResizeImage';
+import { RotatePDF } from './pages/tools/RotatePDF';
+import { ScreenshotToText } from './pages/tools/ScreenshotToText';
+import { SplitPDF } from './pages/tools/SplitPDF';
+import { SVGToPNG } from './pages/tools/SVGToPNG';
+import { TimestampConverter } from './pages/tools/TimestampConverter';
+import { URLEncodeDecode } from './pages/tools/URLEncodeDecode';
+import { UUIDGenerator } from './pages/tools/UUIDGenerator';
+import { WatermarkImage } from './pages/tools/WatermarkImage';
+import { WordCounter } from './pages/tools/WordCounter';
 import { cn } from './lib/utils';
 
 type ToolCategory = 'All' | 'PDF' | 'Image' | 'Utility';
@@ -44,9 +64,33 @@ const TOOL_ITEMS: ToolItem[] = [
     available: true,
   },
   {
+    name: 'Split PDF',
+    path: '/tools/split-pdf',
+    description: 'Extract selected pages into a new PDF.',
+    category: 'PDF',
+    icon: FileStack,
+    available: true,
+  },
+  {
     name: 'Merge PDF',
     path: '/tools/merge-pdf',
     description: 'Join PDFs in the order you choose.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: true,
+  },
+  {
+    name: 'Compress PDF',
+    path: '/tools/compress-pdf',
+    description: 'Optimize and resave a PDF file.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: true,
+  },
+  {
+    name: 'PDF to JPG',
+    path: '/tools/pdf-to-jpg',
+    description: 'Render a PDF page as a JPG image.',
     category: 'PDF',
     icon: FileArchive,
     available: true,
@@ -60,9 +104,41 @@ const TOOL_ITEMS: ToolItem[] = [
     available: true,
   },
   {
+    name: 'HEIC to JPG',
+    path: '/tools/heic-to-jpg',
+    description: 'Convert HEIC photos into JPG.',
+    category: 'Image',
+    icon: ImageIcon,
+    available: true,
+  },
+  {
     name: 'Resize Image',
     path: '/tools/resize-image',
     description: 'Change image dimensions with precision.',
+    category: 'Image',
+    icon: ImageIcon,
+    available: true,
+  },
+  {
+    name: 'Crop Image',
+    path: '/tools/crop-image',
+    description: 'Crop an image using pixel coordinates.',
+    category: 'Image',
+    icon: ImageIcon,
+    available: true,
+  },
+  {
+    name: 'Watermark Image',
+    path: '/tools/watermark-image',
+    description: 'Add a text watermark to an image.',
+    category: 'Image',
+    icon: ImageIcon,
+    available: true,
+  },
+  {
+    name: 'Blur / Redact Image',
+    path: '/tools/blur-redact-image',
+    description: 'Hide sensitive areas with blur or black boxes.',
     category: 'Image',
     icon: ImageIcon,
     available: true,
@@ -76,6 +152,14 @@ const TOOL_ITEMS: ToolItem[] = [
     available: true,
   },
   {
+    name: 'QR Code Scanner',
+    path: '/tools/qr-code-scanner',
+    description: 'Read QR code data from an image.',
+    category: 'Utility',
+    icon: QrCode,
+    available: true,
+  },
+  {
     name: 'JSON Formatter',
     path: '/tools/json-formatter',
     description: 'Format and validate JSON snippets.',
@@ -84,9 +168,57 @@ const TOOL_ITEMS: ToolItem[] = [
     available: true,
   },
   {
+    name: 'URL Encode / Decode',
+    path: '/tools/url-encode-decode',
+    description: 'Encode and decode URL strings.',
+    category: 'Utility',
+    icon: FileCode2,
+    available: true,
+  },
+  {
+    name: 'Word Counter',
+    path: '/tools/word-counter',
+    description: 'Count words, characters, and paragraphs.',
+    category: 'Utility',
+    icon: FileCode2,
+    available: true,
+  },
+  {
+    name: 'UUID Generator',
+    path: '/tools/uuid-generator',
+    description: 'Generate UUID v4 values.',
+    category: 'Utility',
+    icon: Binary,
+    available: true,
+  },
+  {
+    name: 'Timestamp Converter',
+    path: '/tools/timestamp-converter',
+    description: 'Convert Unix timestamps and dates.',
+    category: 'Utility',
+    icon: Binary,
+    available: true,
+  },
+  {
     name: 'Image Converter',
     path: '/tools/image-converter',
     description: 'Convert between JPG, PNG, and WebP.',
+    category: 'Image',
+    icon: WandSparkles,
+    available: true,
+  },
+  {
+    name: 'SVG to PNG',
+    path: '/tools/svg-to-png',
+    description: 'Render pasted SVG markup as PNG.',
+    category: 'Image',
+    icon: WandSparkles,
+    available: true,
+  },
+  {
+    name: 'PNG to SVG',
+    path: '/tools/png-to-svg',
+    description: 'Trace a PNG image into SVG paths.',
     category: 'Image',
     icon: WandSparkles,
     available: true,
@@ -99,9 +231,57 @@ const TOOL_ITEMS: ToolItem[] = [
     icon: Binary,
     available: true,
   },
+  {
+    name: 'Rotate PDF',
+    path: '/tools/rotate-pdf',
+    description: 'Rotate all PDF pages by a fixed angle.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: true,
+  },
+  {
+    name: 'Reorder PDF Pages',
+    path: '/tools/reorder-pdf-pages',
+    description: 'Rebuild a PDF in a custom page order.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: true,
+  },
+  {
+    name: 'Add Page Numbers to PDF',
+    path: '/tools/add-page-numbers-to-pdf',
+    description: 'Stamp page numbers into a PDF.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: true,
+  },
+  {
+    name: 'PDF Protect / Unlock',
+    path: '/tools/pdf-protect-unlock',
+    description: 'Security workflow status and next step.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: true,
+  },
+  {
+    name: 'OCR PDF',
+    path: '/tools/ocr-pdf',
+    description: 'Extract text from the first PDF page.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: true,
+  },
+  {
+    name: 'Screenshot to Text',
+    path: '/tools/screenshot-to-text',
+    description: 'Run OCR on a screenshot image.',
+    category: 'Utility',
+    icon: FileCode2,
+    available: true,
+  },
 ];
 
-const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'QR Code', 'JSON Formatter'];
+const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'PDF to JPG', 'QR Code', 'JSON Formatter'];
 
 const filterTools = (query: string, category: ToolCategory) => {
   const q = query.trim().toLowerCase();
@@ -299,12 +479,32 @@ const App = () => {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/tools/compress-image" element={<CompressImage />} />
           <Route path="/tools/jpg-to-pdf" element={<JPGToPDF />} />
+          <Route path="/tools/split-pdf" element={<SplitPDF />} />
           <Route path="/tools/merge-pdf" element={<MergePDF />} />
+          <Route path="/tools/compress-pdf" element={<CompressPDF />} />
+          <Route path="/tools/pdf-to-jpg" element={<PDFToJPG />} />
           <Route path="/tools/qr-code-generator" element={<QRCodeGenerator />} />
+          <Route path="/tools/qr-code-scanner" element={<QRCodeScanner />} />
           <Route path="/tools/resize-image" element={<ResizeImage />} />
+          <Route path="/tools/heic-to-jpg" element={<HEICToJPG />} />
+          <Route path="/tools/crop-image" element={<CropImage />} />
+          <Route path="/tools/watermark-image" element={<WatermarkImage />} />
+          <Route path="/tools/blur-redact-image" element={<BlurRedactImage />} />
           <Route path="/tools/json-formatter" element={<JSONFormatter />} />
+          <Route path="/tools/url-encode-decode" element={<URLEncodeDecode />} />
+          <Route path="/tools/word-counter" element={<WordCounter />} />
+          <Route path="/tools/uuid-generator" element={<UUIDGenerator />} />
+          <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
+          <Route path="/tools/screenshot-to-text" element={<ScreenshotToText />} />
           <Route path="/tools/image-converter" element={<ImageConverter />} />
+          <Route path="/tools/svg-to-png" element={<SVGToPNG />} />
+          <Route path="/tools/png-to-svg" element={<PNGToSVG />} />
           <Route path="/tools/base64" element={<Base64Tool />} />
+          <Route path="/tools/rotate-pdf" element={<RotatePDF />} />
+          <Route path="/tools/reorder-pdf-pages" element={<ReorderPDFPages />} />
+          <Route path="/tools/add-page-numbers-to-pdf" element={<AddPageNumbersToPDF />} />
+          <Route path="/tools/pdf-protect-unlock" element={<PDFProtectUnlock />} />
+          <Route path="/tools/ocr-pdf" element={<OCRPDF />} />
           <Route path="/tools/*" element={<ToolsPage />} />
           <Route
             path="*"
