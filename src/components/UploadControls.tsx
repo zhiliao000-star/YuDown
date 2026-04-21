@@ -37,9 +37,9 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
       onDragOver={handleDrag}
       onDrop={handleDrop}
       className={cn(
-        'relative rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 text-center transition-colors',
-        'hover:border-[var(--accent)]/60',
-        isDragActive && 'border-[var(--accent)] bg-[var(--surface-3)]'
+        'relative rounded-[24px] border border-dashed p-7 text-center transition-colors',
+        'border-[var(--border-soft)] bg-[var(--surface-raised)] hover:border-[var(--accent-soft)]',
+        isDragActive && 'border-[var(--accent-strong)] bg-white'
       )}
     >
       <input
@@ -49,7 +49,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
         onChange={(e) => e.target.files && onFilesSelected(Array.from(e.target.files))}
         className="absolute inset-0 cursor-pointer opacity-0"
       />
-      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--accent)]">
+      <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-[18px] border border-[var(--border-soft)] bg-white text-[var(--accent-strong)] shadow-[var(--shadow-soft)]">
         <Upload className="h-4 w-4" />
       </div>
       <p className="mt-3 text-sm font-medium text-[var(--fg)]">Drop files here or click to upload</p>
@@ -64,9 +64,9 @@ export const FileList: React.FC<{ files: File[]; onRemove: (index: number) => vo
   return (
     <ul className="mt-4 space-y-2">
       {files.map((file, index) => (
-        <li key={`${file.name}-${index}`} className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
+        <li key={`${file.name}-${index}`} className="flex items-center justify-between rounded-[18px] border border-[var(--border-soft)] bg-white/80 px-3 py-2 shadow-[var(--shadow-soft)]">
           <div className="min-w-0 flex items-center gap-2">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[var(--surface-3)] text-[var(--muted)]">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-[14px] bg-[var(--surface-soft)] text-[var(--muted)]">
               <FileIcon className="h-3.5 w-3.5" />
             </span>
             <div className="min-w-0">

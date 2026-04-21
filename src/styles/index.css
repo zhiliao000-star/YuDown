@@ -21,6 +21,10 @@
   --accent-glow: rgba(230, 150, 111, 0.18);
   --shadow-soft: 0 18px 40px rgba(158, 104, 78, 0.08);
   --shadow-glow: 0 0 0 1px rgba(255, 232, 221, 0.85), 0 24px 60px rgba(184, 123, 87, 0.12);
+  --border: var(--border-soft);
+  --surface-2: var(--surface-soft);
+  --surface-3: var(--surface-raised);
+  --accent: var(--accent-soft);
   color-scheme: light;
 }
 
