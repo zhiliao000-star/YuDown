@@ -13,9 +13,14 @@ import {
   WandSparkles,
 } from 'lucide-react';
 import { Header, Footer } from './layouts/Layout';
+import { Base64Tool } from './pages/tools/Base64Tool';
 import { CompressImage } from './pages/tools/CompressImage';
+import { ImageConverter } from './pages/tools/ImageConverter';
+import { JSONFormatter } from './pages/tools/JSONFormatter';
 import { JPGToPDF } from './pages/tools/JPGToPDF';
+import { MergePDF } from './pages/tools/MergePDF';
 import { QRCodeGenerator } from './pages/tools/QRCodeGenerator';
+import { ResizeImage } from './pages/tools/ResizeImage';
 import { cn } from './lib/utils';
 
 type ToolCategory = 'All' | 'PDF' | 'Image' | 'Utility';
@@ -44,7 +49,7 @@ const TOOL_ITEMS: ToolItem[] = [
     description: 'Join PDFs in the order you choose.',
     category: 'PDF',
     icon: FileArchive,
-    available: false,
+    available: true,
   },
   {
     name: 'Compress Image',
@@ -60,7 +65,7 @@ const TOOL_ITEMS: ToolItem[] = [
     description: 'Change image dimensions with precision.',
     category: 'Image',
     icon: ImageIcon,
-    available: false,
+    available: true,
   },
   {
     name: 'QR Code',
@@ -76,7 +81,7 @@ const TOOL_ITEMS: ToolItem[] = [
     description: 'Format and validate JSON snippets.',
     category: 'Utility',
     icon: FileCode2,
-    available: false,
+    available: true,
   },
   {
     name: 'Image Converter',
@@ -84,7 +89,7 @@ const TOOL_ITEMS: ToolItem[] = [
     description: 'Convert between JPG, PNG, and WebP.',
     category: 'Image',
     icon: WandSparkles,
-    available: false,
+    available: true,
   },
   {
     name: 'Base64',
@@ -92,11 +97,11 @@ const TOOL_ITEMS: ToolItem[] = [
     description: 'Encode or decode Base64 text.',
     category: 'Utility',
     icon: Binary,
-    available: false,
+    available: true,
   },
 ];
 
-const QUICK_LAUNCH = ['JPG to PDF', 'Compress Image', 'QR Code'];
+const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'QR Code', 'JSON Formatter'];
 
 const filterTools = (query: string, category: ToolCategory) => {
   const q = query.trim().toLowerCase();
@@ -130,10 +135,6 @@ const ToolCard = ({ tool }: { tool: ToolItem }) => {
       </div>
     </>
   );
-
-  if (!tool.available) {
-    return <div className="tool-card opacity-50">{content}</div>;
-  }
 
   return (
     <Link to={tool.path} className="tool-card">
@@ -244,34 +245,6 @@ const HomePage = () => {
         Runs in your browser when possible. Quiet by default. No signup.
       </div>
 
-      <section className="mt-10 grid gap-4 md:grid-cols-[1.15fr_0.85fr]">
-        <article className="panel panel-subtle fade-up p-5">
-          <p className="eyebrow">workflow</p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            <div>
-              <p className="text-sm text-[var(--fg-soft)]">Find</p>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">Search by task, not by marketing category.</p>
-            </div>
-            <div>
-              <p className="text-sm text-[var(--fg-soft)]">Run</p>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">Open the tool and act immediately.</p>
-            </div>
-            <div>
-              <p className="text-sm text-[var(--fg-soft)]">Leave</p>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">Download the result and move on.</p>
-            </div>
-          </div>
-        </article>
-
-        <article className="panel panel-subtle fade-up p-5">
-          <p className="eyebrow">notes</p>
-          <div className="mt-3 space-y-2 text-xs leading-5 text-[var(--muted)]">
-            <p><span className="text-[var(--fg-soft)]">Privacy:</span> most supported tasks stay local.</p>
-            <p><span className="text-[var(--fg-soft)]">Works fast:</span> the interface stays compact and direct.</p>
-            <p><span className="text-[var(--fg-soft)]">Best used:</span> when you need one utility, right now.</p>
-          </div>
-        </article>
-      </section>
     </main>
   );
 };
@@ -326,7 +299,12 @@ const App = () => {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/tools/compress-image" element={<CompressImage />} />
           <Route path="/tools/jpg-to-pdf" element={<JPGToPDF />} />
+          <Route path="/tools/merge-pdf" element={<MergePDF />} />
           <Route path="/tools/qr-code-generator" element={<QRCodeGenerator />} />
+          <Route path="/tools/resize-image" element={<ResizeImage />} />
+          <Route path="/tools/json-formatter" element={<JSONFormatter />} />
+          <Route path="/tools/image-converter" element={<ImageConverter />} />
+          <Route path="/tools/base64" element={<Base64Tool />} />
           <Route path="/tools/*" element={<ToolsPage />} />
           <Route
             path="*"
