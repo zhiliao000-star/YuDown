@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Upload, X, File as FileIcon } from 'lucide-react';
+import { File as FileIcon, Upload, X } from 'lucide-react';
 import { cn, formatBytes } from '../lib/utils';
 
 interface FilePickerProps {
@@ -14,21 +14,21 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setIsDragActive(true);
-    } else if (e.type === 'dragleave') {
-      setIsDragActive(false);
-    }
+    if (e.type === 'dragenter' || e.type === 'dragover') setIsDragActive(true);
+    if (e.type === 'dragleave') setIsDragActive(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      onFilesSelected(Array.from(e.dataTransfer.files));
-    }
-  }, [onFilesSelected]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragActive(false);
+      if (e.dataTransfer.files?.length) {
+        onFilesSelected(Array.from(e.dataTransfer.files));
+      }
+    },
+    [onFilesSelected]
+  );
 
   return (
     <div
@@ -37,8 +37,9 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
       onDragOver={handleDrag}
       onDrop={handleDrop}
       className={cn(
-        "relative mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-12 text-center transition-colors hover:border-blue-400 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-blue-500/50",
-        isDragActive && "border-blue-500 bg-blue-50 dark:bg-blue-900/10"
+        'relative rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 text-center transition-colors',
+        'hover:border-[var(--accent)]/60',
+        isDragActive && 'border-[var(--accent)] bg-[var(--surface-3)]'
       )}
     >
       <input
@@ -46,44 +47,39 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
         multiple={multiple}
         accept={accept}
         onChange={(e) => e.target.files && onFilesSelected(Array.from(e.target.files))}
-        className="absolute inset-0 z-10 cursor-pointer opacity-0"
+        className="absolute inset-0 cursor-pointer opacity-0"
       />
-      <div className="flex shrink-0 items-center justify-center rounded-full bg-blue-100 p-4 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-        <Upload className="h-8 w-8" />
+      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--accent)]">
+        <Upload className="h-4 w-4" />
       </div>
-      <div className="mt-4">
-        <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-          Click to upload or drag and drop
-        </p>
-        <p className="mt-1 text-sm text-slate-500">
-          {multiple ? 'Select multiple files' : 'Select a file'}
-        </p>
-      </div>
+      <p className="mt-3 text-sm font-medium text-[var(--fg)]">Drop files here or click to upload</p>
+      <p className="mt-1 text-xs text-[var(--muted)]">{multiple ? 'Multiple files supported' : 'Single file mode'}</p>
     </div>
   );
 };
 
 export const FileList: React.FC<{ files: File[]; onRemove: (index: number) => void }> = ({ files, onRemove }) => {
-  if (files.length === 0) return null;
+  if (!files.length) return null;
+
   return (
-    <ul className="mt-6 flex flex-col gap-3">
-      {files.map((file, i) => (
-        <li key={i} className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center gap-3 overflow-hidden">
-            <div className="shrink-0 rounded-md bg-blue-50 p-2 text-blue-500 dark:bg-blue-900/20 dark:text-blue-400">
-              <FileIcon size={20} />
-            </div>
-            <div className="truncate">
-              <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-200">{file.name}</p>
-              <p className="text-xs text-slate-500">{formatBytes(file.size)}</p>
+    <ul className="mt-4 space-y-2">
+      {files.map((file, index) => (
+        <li key={`${file.name}-${index}`} className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
+          <div className="min-w-0 flex items-center gap-2">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[var(--surface-3)] text-[var(--muted)]">
+              <FileIcon className="h-3.5 w-3.5" />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm text-[var(--fg)]">{file.name}</p>
+              <p className="text-[11px] text-[var(--muted)]">{formatBytes(file.size)}</p>
             </div>
           </div>
           <button
-            onClick={() => onRemove(i)}
-            className="flex shrink-0 items-center justify-center rounded-md p-2 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"
-            title="Remove file"
+            onClick={() => onRemove(index)}
+            className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--muted)] transition hover:bg-[var(--surface-3)] hover:text-[var(--fg)]"
+            title="Remove"
           >
-            <X size={18} />
+            <X className="h-3.5 w-3.5" />
           </button>
         </li>
       ))}

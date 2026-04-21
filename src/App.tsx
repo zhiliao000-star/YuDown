@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { NavLink, Link, Routes, Route, useLocation } from 'react-router-dom';
-import { 
-  FileBox, 
-  Image as ImageIcon, 
-  Settings, 
-  FileStack, 
-  QrCode, 
-  Code2, 
-  Minimize2, 
-  Maximize2, 
-  FileImage,
-  Repeat
+import React from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
+import {
+  ArrowRight,
+  Binary,
+  FileArchive,
+  FileCode2,
+  FileStack,
+  Filter,
+  Image as ImageIcon,
+  Minimize2,
+  QrCode,
+  Search,
+  WandSparkles,
 } from 'lucide-react';
 import { Header, Footer } from './layouts/Layout';
 import { CompressImage } from './pages/tools/CompressImage';
@@ -18,137 +19,330 @@ import { JPGToPDF } from './pages/tools/JPGToPDF';
 import { QRCodeGenerator } from './pages/tools/QRCodeGenerator';
 import { cn } from './lib/utils';
 
-// Placeholder Pages
+type ToolCategory = 'All' | 'PDF' | 'Image' | 'Utility';
+
+type ToolItem = {
+  name: string;
+  path: string;
+  description: string;
+  category: Exclude<ToolCategory, 'All'>;
+  icon: React.ComponentType<{ className?: string }>;
+  available?: boolean;
+};
+
+const TOOL_ITEMS: ToolItem[] = [
+  {
+    name: 'JPG to PDF',
+    path: '/tools/jpg-to-pdf',
+    description: 'Combine JPG or PNG images into one PDF.',
+    category: 'PDF',
+    icon: FileStack,
+    available: true,
+  },
+  {
+    name: 'Merge PDF',
+    path: '/tools/merge-pdf',
+    description: 'Join multiple PDF files in sequence.',
+    category: 'PDF',
+    icon: FileArchive,
+    available: false,
+  },
+  {
+    name: 'Compress Image',
+    path: '/tools/compress-image',
+    description: 'Shrink image size while preserving quality.',
+    category: 'Image',
+    icon: Minimize2,
+    available: true,
+  },
+  {
+    name: 'Resize Image',
+    path: '/tools/resize-image',
+    description: 'Change width and height quickly.',
+    category: 'Image',
+    icon: ImageIcon,
+    available: false,
+  },
+  {
+    name: 'QR Code',
+    path: '/tools/qr-code-generator',
+    description: 'Generate static QR codes instantly.',
+    category: 'Utility',
+    icon: QrCode,
+    available: true,
+  },
+  {
+    name: 'JSON Formatter',
+    path: '/tools/json-formatter',
+    description: 'Format and validate JSON snippets.',
+    category: 'Utility',
+    icon: FileCode2,
+    available: false,
+  },
+  {
+    name: 'Image Converter',
+    path: '/tools/image-converter',
+    description: 'Convert between JPG, PNG, WebP.',
+    category: 'Image',
+    icon: WandSparkles,
+    available: false,
+  },
+  {
+    name: 'Base64',
+    path: '/tools/base64',
+    description: 'Encode or decode Base64 text.',
+    category: 'Utility',
+    icon: Binary,
+    available: false,
+  },
+];
+
+const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'QR Code', 'JSON Formatter'];
+
+const filterTools = (query: string, category: ToolCategory) => {
+  const q = query.trim().toLowerCase();
+
+  return TOOL_ITEMS.filter((tool) => {
+    const categoryMatch = category === 'All' || tool.category === category;
+    const queryMatch =
+      q.length === 0 ||
+      tool.name.toLowerCase().includes(q) ||
+      tool.description.toLowerCase().includes(q) ||
+      tool.category.toLowerCase().includes(q);
+
+    return categoryMatch && queryMatch;
+  });
+};
+
+const ToolCard = ({ tool }: { tool: ToolItem }) => {
+  const content = (
+    <>
+      <div className="flex items-start justify-between gap-3">
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface-2)] text-[var(--accent)]">
+          <tool.icon className="h-4 w-4" />
+        </span>
+        <span className="text-[11px] uppercase tracking-wide text-[var(--muted)]">{tool.category}</span>
+      </div>
+      <h3 className="mt-3 text-sm font-semibold text-[var(--fg)]">{tool.name}</h3>
+      <p className="mt-1 text-xs text-[var(--muted)]">{tool.description}</p>
+      <div className="mt-3 inline-flex items-center gap-1 text-xs text-[var(--accent)]">
+        <span>{tool.available ? 'Open tool' : 'Planned'}</span>
+        <ArrowRight className="h-3 w-3" />
+      </div>
+    </>
+  );
+
+  if (!tool.available) {
+    return <div className="tool-card opacity-60">{content}</div>;
+  }
+
+  return (
+    <Link to={tool.path} className="tool-card">
+      {content}
+    </Link>
+  );
+};
+
+const Launcher = ({ compact = false }: { compact?: boolean }) => {
+  const [query, setQuery] = React.useState('');
+  const [category, setCategory] = React.useState<ToolCategory>('All');
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === '/' && document.activeElement !== inputRef.current) {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  const tools = filterTools(query, category);
+
+  return (
+    <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-6')}>
+      <div className="panel">
+        {!compact && (
+          <>
+            <h1 className="text-balance text-[22px] font-semibold leading-tight text-[var(--fg)] sm:text-[28px]">
+              Fast browser-based tools for files, images, and quick tasks.
+            </h1>
+            <p className="mt-2 text-sm text-[var(--muted)]">
+              Pick a tool, drop your file, and finish in seconds. No account and minimal friction.
+            </p>
+          </>
+        )}
+
+        <div className={cn(compact ? 'mt-0' : 'mt-5')}>
+          <label htmlFor="tool-search" className="sr-only">
+            Search tools
+          </label>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+            <input
+              id="tool-search"
+              ref={inputRef}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search tools..."
+              className="h-11 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] pl-10 pr-20 text-sm text-[var(--fg)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
+            />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded border border-[var(--border)] bg-[var(--surface-2)] px-1.5 py-0.5 text-[10px] text-[var(--muted)]">
+              /
+            </span>
+          </div>
+        </div>
+
+        {!compact && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {QUICK_LAUNCH.map((label) => {
+              const tool = TOOL_ITEMS.find((item) => item.name === label);
+              if (!tool) return null;
+              return tool.available ? (
+                <Link key={label} to={tool.path} className="chip">
+                  {label}
+                </Link>
+              ) : (
+                <span key={label} className="chip opacity-60">
+                  {label}
+                </span>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-[var(--muted)]">
+            <Filter className="h-3.5 w-3.5" />
+            Category
+          </span>
+          {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setCategory(tab)}
+              className={cn('chip', category === tab && 'chip-active')}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {tools.map((tool) => (
+            <ToolCard key={tool.path} tool={tool} />
+          ))}
+        </div>
+
+        {tools.length === 0 && (
+          <div className="mt-4 rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] px-4 py-6 text-center text-sm text-[var(--muted)]">
+            No tools matched your search.
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
 const HomePage = () => {
-    const tools = [
-        { name: 'JPG to PDF', path: '/tools/jpg-to-pdf', icon: FileStack, color: 'bg-red-100 text-red-600', description: 'Convert images into high-quality PDF documents' },
-        { name: 'Compress Image', path: '/tools/compress-image', icon: Minimize2, color: 'bg-blue-100 text-blue-600', description: 'Reduce image file size with minimal loss' },
-        { name: 'QR Code Generator', path: '/tools/qr-code-generator', icon: QrCode, color: 'bg-green-100 text-green-600', description: 'Create customizable QR codes for free' },
-        { name: 'Resize Image', path: '/tools/resize-image', icon: Maximize2, color: 'bg-purple-100 text-purple-600', description: 'Change dimensions of your image files' },
-        { name: 'Merge PDF', path: '/tools/merge-pdf', icon: FileStack, color: 'bg-orange-100 text-orange-600', description: 'Merge multiple PDF files into one' },
-        { name: 'Converter', path: '/tools/image-converter', icon: Repeat, color: 'bg-indigo-100 text-indigo-600', description: 'Convert between JPG, PNG, WebP & more' },
-    ];
+  return (
+    <main className="mx-auto w-full max-w-[1100px] px-4 pb-8 pt-6 sm:px-5">
+      <Launcher />
 
-    return (
-        <main className="flex-1">
-            <section className="bg-slate-50 py-24 dark:bg-slate-950/40">
-                <div className="mx-auto max-w-7xl px-6 text-center lg:px-12">
-                   <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl dark:text-slate-50">
-                     Free online tools for PDFs, images,<br className="hidden sm:block" /> and everyday tasks.
-                   </h1>
-                   <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-                     Simple, secure, and fast tools for everyone. 
-                     No uploads, no database, no registration. 
-                     Everything happens in your browser.
-                   </p>
-                   <div className="mt-10 flex flex-wrap justify-center gap-4">
-                      <Link to="/tools" className="rounded-full bg-blue-600 px-8 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-blue-500/25">
-                         Explore All Tools
-                      </Link>
-                      <Link to="/about" className="rounded-full bg-white px-8 py-3 text-sm font-bold text-slate-900 shadow-sm ring-1 ring-slate-200 transition-all hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-100 dark:ring-slate-800">
-                         How it works
-                      </Link>
-                   </div>
-                </div>
-            </section>
+      <div className="trust-strip mt-4">Runs in your browser when possible. No signup.</div>
 
-            <section className="mx-auto max-w-7xl px-6 py-24 sm:px-12">
-               <div className="flex items-center justify-between">
-                  <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Popular Tools</h2>
-                  <Link to="/tools" className="text-sm font-semibold text-blue-600 hover:text-blue-500 dark:text-blue-400">See all &rarr;</Link>
-               </div>
-               <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {tools.map((tool) => (
-                      <Link key={tool.name} to={tool.path} className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:-translate-y-1 hover:border-blue-400 hover:shadow-xl dark:border-slate-800 dark:bg-slate-950/20">
-                          <div className={cn("inline-flex items-center justify-center rounded-xl p-3", tool.color)}>
-                             <tool.icon className="h-6 w-6" />
-                          </div>
-                          <h3 className="mt-6 text-xl font-bold text-slate-900 dark:text-slate-50">{tool.name}</h3>
-                          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{tool.description}</p>
-                          <div className="mt-6 flex h-10 w-10 items-center justify-center rounded-full bg-slate-50 text-slate-300 transition-colors group-hover:bg-blue-600 group-hover:text-white dark:bg-slate-900">
-                             <ArrowRight className="h-4 w-4" />
-                          </div>
-                      </Link>
-                  ))}
-               </div>
-            </section>
+      <section className="mt-8 grid gap-4 md:grid-cols-2">
+        <article className="panel p-4">
+          <h2 className="text-sm font-semibold text-[var(--fg)]">How it works</h2>
+          <ol className="mt-2 space-y-1.5 text-xs text-[var(--muted)]">
+            <li>1. Search and open a tool.</li>
+            <li>2. Drop your file or input text.</li>
+            <li>3. Process instantly in your browser.</li>
+            <li>4. Download or copy the result.</li>
+          </ol>
+        </article>
+        <article className="panel p-4">
+          <h2 className="text-sm font-semibold text-[var(--fg)]">FAQ</h2>
+          <div className="mt-2 space-y-2 text-xs text-[var(--muted)]">
+            <p><span className="text-[var(--fg)]">Is it private?</span> Most tools run locally, so files stay on your device.</p>
+            <p><span className="text-[var(--fg)]">Do I need an account?</span> No. Open the tool and start immediately.</p>
+            <p><span className="text-[var(--fg)]">Mobile support?</span> Yes, recent iOS and Android browsers work.</p>
+          </div>
+        </article>
+      </section>
+    </main>
+  );
+};
 
-            <section className="bg-white py-24 dark:bg-slate-950">
-               <div className="mx-auto max-w-4xl px-6 sm:px-12">
-                  <div className="text-center">
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Why Choose YuTools?</h2>
-                    <p className="mt-4 text-slate-600 dark:text-slate-400">We prioritize privacy, speed, and simplicity.</p>
-                  </div>
-                  <div className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2">
-                     <div className="flex gap-6">
-                        <div className="flex shrink-0 h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                           <FileBox className="h-6 w-6" />
-                        </div>
-                        <div>
-                           <h3 className="font-bold text-slate-900 dark:text-slate-50">Privacy First</h3>
-                           <p className="mt-2 text-sm text-slate-500 leading-relaxed dark:text-slate-400">Your files never leave your device. We use browser-side processing whenever possible, ensuring your sensitive data remains local.</p>
-                        </div>
-                     </div>
-                     <div className="flex gap-6">
-                        <div className="flex shrink-0 h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-                           <Settings className="h-6 w-6" />
-                        </div>
-                        <div>
-                           <h3 className="font-bold text-slate-900 dark:text-slate-50">Free Forever</h3>
-                           <p className="mt-2 text-sm text-slate-500 leading-relaxed dark:text-slate-400">No subscriptions, no account required. Just open YuTools and start processing your files for free, anytime.</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </section>
-        </main>
-    )
-}
-
-const ArrowRight = ({ className }: { className?: string }) => (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-    </svg>
-);
+const ToolsPage = () => {
+  return (
+    <main className="mx-auto w-full max-w-[1100px] px-4 pb-8 pt-6 sm:px-5">
+      <div className="mb-3">
+        <h1 className="text-lg font-semibold text-[var(--fg)]">All tools</h1>
+        <p className="text-sm text-[var(--muted)]">Find and launch a task without scrolling through marketing content.</p>
+      </div>
+      <Launcher compact />
+    </main>
+  );
+};
 
 const AboutPage = () => (
-    <div className="mx-auto max-w-3xl px-6 py-24 sm:px-12">
-        <h1 className="text-4xl font-extrabold text-slate-900 dark:text-slate-50">About YuTools</h1>
-        <p className="mt-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-            YuTools is a suite of lightweight, high-performance utility tools designed to simplify your digital tasks without compromising your privacy. 
-            Unlike traditional tools that require you to upload your files to their servers, our platform processes most files directly in your web browser. 
-        </p>
-        <h2 className="mt-12 text-2xl font-bold">Our Philosophy</h2>
-        <p className="mt-4 text-slate-600 dark:text-slate-400">
-           Digital privacy shouldn't be a luxury. We believe in building tools that are:
-        </p>
-        <ul className="mt-6 space-y-4 list-disc list-inside text-slate-600 dark:text-slate-400">
-           <li><strong>Accessible:</strong> Free for everyone, everywhere.</li>
-           <li><strong>Private:</strong> Local processing is our default choice.</li>
-           <li><strong>Fast:</strong> No server-side wait times or upload/download bottlenecks.</li>
-        </ul>
-    </div>
-)
+  <main className="mx-auto w-full max-w-[920px] px-4 pb-8 pt-6 sm:px-5">
+    <section className="panel p-5">
+      <h1 className="text-lg font-semibold text-[var(--fg)]">About YuTools</h1>
+      <p className="mt-2 text-sm text-[var(--muted)]">
+        YuTools is a compact utility workspace for everyday file and text tasks. The product is designed for speed,
+        privacy, and direct interaction instead of marketing-heavy pages.
+      </p>
+    </section>
+  </main>
+);
+
+const PrivacyPage = () => (
+  <main className="mx-auto w-full max-w-[920px] px-4 pb-8 pt-6 sm:px-5">
+    <section className="panel p-5">
+      <h1 className="text-lg font-semibold text-[var(--fg)]">Privacy</h1>
+      <p className="mt-2 text-sm text-[var(--muted)]">
+        YuTools prefers browser-side processing. For supported tools, files stay on your device and are not uploaded.
+      </p>
+    </section>
+  </main>
+);
 
 const App = () => {
-    return (
-        <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
-            <Header />
-            <div className="flex-1">
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/tools/compress-image" element={<CompressImage />} />
-                    <Route path="/tools/jpg-to-pdf" element={<JPGToPDF />} />
-                    <Route path="/tools/qr-code-generator" element={<QRCodeGenerator />} />
-                    {/* Add redirections for unfinished tools to homepage for now */}
-                    <Route path="/tools/*" element={<HomePage />} />
-                    <Route path="*" element={<div className="flex items-center justify-center py-24"><h1 className="text-4xl font-bold">404 - Not Found</h1></div>} />
-                </Routes>
-            </div>
-            <Footer />
-        </div>
-    )
-}
+  return (
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--fg)]">
+      <Header />
+      <div className="flex-1">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/tools" element={<ToolsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/tools/compress-image" element={<CompressImage />} />
+          <Route path="/tools/jpg-to-pdf" element={<JPGToPDF />} />
+          <Route path="/tools/qr-code-generator" element={<QRCodeGenerator />} />
+          <Route path="/tools/*" element={<ToolsPage />} />
+          <Route
+            path="*"
+            element={
+              <main className="mx-auto w-full max-w-[920px] px-4 pb-8 pt-6 sm:px-5">
+                <div className="panel p-6 text-center">
+                  <h1 className="text-lg font-semibold text-[var(--fg)]">Page not found</h1>
+                  <Link to="/tools" className="mt-3 inline-flex text-sm text-[var(--accent)] hover:opacity-90">
+                    Back to tools
+                  </Link>
+                </div>
+              </main>
+            }
+          />
+        </Routes>
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
 export default App;
