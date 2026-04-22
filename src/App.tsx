@@ -286,11 +286,11 @@ const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'PDF to JPG',
 
 const RouteLoading = () => (
   <main className="mx-auto w-full max-w-[1100px] px-4 pb-10 pt-6 sm:px-5">
-    <div className="panel fade-up-soft p-6">
-      <div className="h-3 w-24 rounded-full bg-white/70" />
-      <div className="mt-4 h-9 w-56 rounded-full bg-white/70" />
-      <div className="mt-3 h-4 w-full max-w-[520px] rounded-full bg-white/60" />
-      <div className="mt-8 h-[320px] rounded-[28px] border border-[var(--border-soft)] bg-white/55" />
+    <div className="panel p-6">
+      <div className="h-3 w-24 rounded bg-gray-100" />
+      <div className="mt-4 h-9 w-56 rounded bg-gray-100" />
+      <div className="mt-3 h-4 w-full max-w-[520px] rounded bg-gray-100" />
+      <div className="mt-8 h-[320px] rounded-lg border border-[var(--border-soft)] bg-gray-50" />
     </div>
   </main>
 );
@@ -310,26 +310,26 @@ const filterTools = (query: string, category: ToolCategory) => {
   });
 };
 
-const ToolCard = ({ tool, index }: { tool: ToolItem; index: number }) => {
+const ToolCard = ({ tool }: { tool: ToolItem }) => {
   const content = (
     <>
       <div className="flex items-start justify-between gap-3">
         <span className="tool-icon">
-          <tool.icon className="h-4 w-4" />
+          <tool.icon className="h-5 w-5" />
         </span>
-        <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-dim)]">{tool.category}</span>
+        <span className="text-xs font-medium uppercase tracking-wide text-[var(--muted-dim)]">{tool.category}</span>
       </div>
-      <h3 className="mt-4 text-sm font-medium text-[var(--fg)]">{tool.name}</h3>
-      <p className="mt-1.5 text-xs leading-5 text-[var(--muted)]">{tool.description}</p>
-      <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[var(--fg-soft)]">
-        <span>{tool.available ? 'Open' : 'Soon'}</span>
-        <ArrowUpRight className="h-3 w-3" />
+      <h3 className="mt-3 text-base font-medium text-[var(--fg)]">{tool.name}</h3>
+      <p className="mt-1 text-sm text-[var(--muted)]">{tool.description}</p>
+      <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--accent-strong)]">
+        <span>{tool.available ? 'Open tool' : 'Coming soon'}</span>
+        <ArrowUpRight className="h-4 w-4" />
       </div>
     </>
   );
 
   return (
-    <Link to={tool.path} className={cn('tool-card fade-up-soft', `stagger-${(index % 6) + 1}`)}>
+    <Link to={tool.path} className="tool-card">
       {content}
     </Link>
   );
@@ -357,27 +357,21 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
 
   return (
     <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-8')}>
-      <div className={cn('relative', !compact && 'hero-reveal')}>
-        {!compact && (
-          <>
-            <div className="hero-orb" />
-            <div className="hero-orb-right" />
-          </>
-        )}
+      <div className="relative">
         {!compact && (
           <div className="max-w-[640px]">
-            <p className="eyebrow">quiet utility workspace</p>
-            <h1 className="mt-3 text-balance text-[28px] font-semibold leading-[1.05] text-[var(--fg)] sm:text-[38px]">
-              Gentle tools for files, images, and quick tasks.
+            <p className="text-xs uppercase tracking-widest text-[var(--muted-dim)]">YuTools</p>
+            <h1 className="mt-2 text-2xl font-semibold text-[var(--fg)] sm:text-3xl">
+              Simple tools for files, images, and quick tasks.
             </h1>
-            <p className="mt-3 max-w-[560px] text-sm leading-6 text-[var(--muted)]">
-              Search, open, and finish the task with as little friction as possible.
+            <p className="mt-2 max-w-[560px] text-sm text-[var(--muted)]">
+              Search, open, and finish the task quickly.
             </p>
           </div>
         )}
 
-        <div className={cn('relative', compact ? 'mt-0' : 'mt-8')}>
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-dim)]" />
+        <div className={cn('relative', compact ? 'mt-0' : 'mt-6')}>
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-dim)]" />
           <input
             ref={inputRef}
             value={query}
@@ -389,7 +383,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
         </div>
 
         {!compact && (
-          <div className="mt-5 flex flex-wrap gap-2 fade-up-soft stagger-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             {QUICK_LAUNCH.map((label) => {
               const tool = TOOL_ITEMS.find((item) => item.name === label);
               if (!tool) return null;
@@ -403,7 +397,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
           </div>
         )}
 
-        <div className="mt-6 flex flex-wrap items-center gap-2 fade-up-soft stagger-3">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
             <button
               key={tab}
@@ -435,7 +429,7 @@ const HomePage = () => {
       <Launcher />
 
       <div className="trust-strip mt-4">
-        Runs in your browser when possible. Quiet by default. No signup.
+        Runs in your browser when possible. No signup required.
       </div>
 
     </main>
