@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FileList, FilePicker } from '../../components/UploadControls';
+import { PrimaryButton, RelatedTools, SecondaryButton, ToolNoteCard, ToolPageShell } from '../../components/ToolLayout';
 import { downloadFile } from '../../lib/utils';
 import { ArrowDownToLine, Loader2, Scaling } from 'lucide-react';
 
@@ -63,60 +64,68 @@ export const ResizeImage = () => {
   };
 
   return (
-    <main className="mx-auto w-full max-w-[920px] px-4 pb-10 pt-6 sm:px-5">
-      <section className="panel p-5 sm:p-6">
-        <p className="eyebrow">image</p>
-        <h1 className="mt-2 text-[24px] font-semibold text-[var(--fg)]">Resize Image</h1>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Set a target width and height, then export the resized image.</p>
+    <ToolPageShell
+      eyebrow="image"
+      title="Resize Image"
+      description="Set a target width and height, then export the resized image."
+      aside={
+        <>
+          <ToolNoteCard title="Tip">
+            Use exact pixel sizes for social posts, thumbnails, and banners. The original format is preserved.
+          </ToolNoteCard>
+          <RelatedTools
+            items={[
+              { label: 'Compress Image', to: '/tools/compress-image' },
+              { label: 'Crop Image', to: '/tools/crop-image' },
+              { label: 'Image Converter', to: '/tools/image-converter' },
+            ]}
+          />
+        </>
+      }
+    >
+      <FilePicker onFilesSelected={handleFiles} accept="image/*" multiple={false} />
+      <FileList files={files} onRemove={() => setFiles([])} />
 
-        <div className="mt-6">
-          <FilePicker onFilesSelected={handleFiles} accept="image/*" multiple={false} />
-          <FileList files={files} onRemove={() => setFiles([])} />
-        </div>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <label className="text-sm text-[var(--muted)]">
+          Width
+          <input
+            type="number"
+            value={width}
+            onChange={(event) => setWidth(Number(event.target.value))}
+            className="field-input mt-2"
+          />
+        </label>
+        <label className="text-sm text-[var(--muted)]">
+          Height
+          <input
+            type="number"
+            value={height}
+            onChange={(event) => setHeight(Number(event.target.value))}
+            className="field-input mt-2"
+          />
+        </label>
+      </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          <label className="text-sm text-[var(--muted)]">
-            Width
-            <input
-              type="number"
-              value={width}
-              onChange={(event) => setWidth(Number(event.target.value))}
-              className="mt-2 w-full rounded-[18px] border border-[var(--border-soft)] bg-[var(--surface-raised)] px-4 py-3 text-[var(--fg)] outline-none"
-            />
-          </label>
-          <label className="text-sm text-[var(--muted)]">
-            Height
-            <input
-              type="number"
-              value={height}
-              onChange={(event) => setHeight(Number(event.target.value))}
-              className="mt-2 w-full rounded-[18px] border border-[var(--border-soft)] bg-[var(--surface-raised)] px-4 py-3 text-[var(--fg)] outline-none"
-            />
-          </label>
-        </div>
+      <PrimaryButton onClick={resizeImage} disabled={processing || !files.length} className="mt-5">
+        {processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Scaling className="h-4 w-4" />}
+        Resize image
+      </PrimaryButton>
 
-        <button
-          onClick={resizeImage}
-          disabled={processing || !files.length}
-          className="mt-5 inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-[var(--surface-raised)] px-5 py-3 text-sm text-[var(--fg)] transition hover:border-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Scaling className="h-4 w-4" />}
-          Resize image
-        </button>
-
-        {result && (
-          <div className="mt-6 rounded-[22px] border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4">
-            <p className="text-sm text-[var(--fg-soft)]">Resized image is ready.</p>
-            <button
-              onClick={() => downloadFile(result, 'yutools-resized-image.png')}
-              className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-[var(--surface-raised)] px-4 py-2 text-sm text-[var(--fg)] transition hover:border-[var(--accent-soft)]"
-            >
+      {result && (
+        <div className="result-card mt-6">
+          <p className="text-sm text-[var(--fg-soft)]">Resized image is ready.</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <PrimaryButton onClick={() => downloadFile(result, 'yutools-resized-image.png')}>
               <ArrowDownToLine className="h-4 w-4" />
               Download image
-            </button>
+            </PrimaryButton>
+            <SecondaryButton onClick={() => { setFiles([]); setResult(null); }}>
+              Resize another image
+            </SecondaryButton>
           </div>
-        )}
-      </section>
-    </main>
+        </div>
+      )}
+    </ToolPageShell>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { FileList, FilePicker } from '../../components/UploadControls';
-import { ToolPageShell, PrimaryButton, RelatedTools } from '../../components/ToolLayout';
+import { ToolPageShell, PrimaryButton, RelatedTools, SecondaryButton, ToolNoteCard } from '../../components/ToolLayout';
 import { downloadFile } from '../../lib/utils';
 import { ArrowDownToLine, Combine, Loader2 } from 'lucide-react';
 
@@ -52,13 +52,18 @@ export const MergePDF = () => {
       title="Merge PDF"
       description="Combine multiple PDF files into one document in your browser."
       aside={
-        <RelatedTools
-          items={[
-            { label: 'Split PDF', to: '/tools/split-pdf' },
-            { label: 'Compress PDF', to: '/tools/compress-pdf' },
-            { label: 'JPG to PDF', to: '/tools/jpg-to-pdf' },
-          ]}
-        />
+        <>
+          <ToolNoteCard title="Merging order">
+            Files merge in the visible order below. Remove and re-add files if you need a different sequence.
+          </ToolNoteCard>
+          <RelatedTools
+            items={[
+              { label: 'Split PDF', to: '/tools/split-pdf' },
+              { label: 'Compress PDF', to: '/tools/compress-pdf' },
+              { label: 'JPG to PDF', to: '/tools/jpg-to-pdf' },
+            ]}
+          />
+        </>
       }
     >
       <div className="mt-6">
@@ -78,15 +83,17 @@ export const MergePDF = () => {
       </div>
 
       {mergedPdf && (
-        <div className="mt-6 rounded-[22px] border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4">
+        <div className="result-card mt-6">
           <p className="text-sm text-[var(--fg-soft)]">Merged PDF is ready.</p>
-          <button
-            onClick={() => downloadFile(mergedPdf, 'yutools-merged.pdf')}
-            className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-white px-4 py-2 text-sm text-[var(--fg)] transition hover:border-[var(--accent-soft)]"
-          >
-            <ArrowDownToLine className="h-4 w-4" />
-            Download PDF
-          </button>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <PrimaryButton onClick={() => downloadFile(mergedPdf, 'yutools-merged.pdf')}>
+              <ArrowDownToLine className="h-4 w-4" />
+              Download PDF
+            </PrimaryButton>
+            <SecondaryButton onClick={() => { setFiles([]); setMergedPdf(null); }}>
+              Merge another file set
+            </SecondaryButton>
+          </div>
         </div>
       )}
     </ToolPageShell>
