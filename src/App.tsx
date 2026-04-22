@@ -315,33 +315,31 @@ const filterTools = (query: string, category: ToolCategory) => {
 const ToolCard = ({ tool, index }: { tool: ToolItem; index: number }) => {
   const isPDF = tool.category === 'PDF';
   const isImage = tool.category === 'Image';
-  const isUtility = tool.category === 'Utility';
 
   const categoryColorClass = isPDF 
-    ? 'text-[#e5322d] group-hover:bg-[#e5322d]' 
+    ? 'text-[#e5322d]' 
     : isImage 
-      ? 'text-[#008de1] group-hover:bg-[#008de1]' 
-      : 'text-[#4caf50] group-hover:bg-[#4caf50]';
+      ? 'text-[#008de1]' 
+      : 'text-[#4caf50]';
 
   return (
     <Link to={tool.path} className={cn(
       "group flex flex-col items-center text-center bg-white rounded-xl p-8 border border-gray-200 transition-all duration-200 cursor-pointer animate-in fade-in slide-in-from-bottom-4 shadow-sm",
-      "hover:border-transparent hover:shadow-xl",
+      "hover:border-gray-300 hover:shadow-xl",
       categoryColorClass
     )} style={{ animationDelay: `${index * 30}ms`, animationFillMode: 'both' }}>
       
       <div className="mb-4">
          <tool.icon className={cn(
-            "h-12 w-12 transition-colors duration-200", 
-            "group-hover:text-white"
+            "h-12 w-12 transition-transform duration-200 group-hover:scale-110", 
           )} strokeWidth={1.5} />
       </div>
 
-      <h3 className="text-xl font-bold text-gray-900 group-hover:text-white transition-colors duration-200 leading-tight">
+      <h3 className="text-xl font-bold text-gray-900 transition-colors duration-200 leading-tight">
         {tool.name}
       </h3>
       
-      <p className="mt-3 text-[15px] font-medium text-gray-500 group-hover:text-white/90 transition-colors duration-200 leading-relaxed">
+      <p className="mt-3 text-[15px] font-medium text-gray-500 transition-colors duration-200 leading-relaxed">
         {tool.description}
       </p>
     </Link>

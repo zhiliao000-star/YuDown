@@ -17,25 +17,14 @@ export const ToolPageShell = ({
   aside?: React.ReactNode;
 }) => {
   return (
-    <main className="mx-auto w-full max-w-[1200px] px-4 pb-16 pt-8 sm:px-6">
-      <div className="mb-8 flex items-center gap-2 text-sm text-[var(--muted)]">
-        <Link to="/tools" className="hover:text-[var(--accent-strong)] transition-colors">Tools</Link>
-        <ChevronRight className="h-4 w-4" />
-        <span className="text-[var(--fg)]">{eyebrow}</span>
-      </div>
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h1 className="text-3xl font-bold tracking-tight text-[var(--fg)] sm:text-4xl">{title}</h1>
-          <p className="mt-3 max-w-[720px] text-base leading-relaxed text-[var(--muted)]">{description}</p>
-          <div className="mt-8">
-            <div className="panel bg-white p-6 shadow-sm border-[var(--border-soft)]">
-               {children}
-            </div>
-          </div>
-        </section>
-        <aside className="space-y-6">
-          {aside}
-        </aside>
+    <main className="mx-auto w-full max-w-[900px] px-4 py-20 sm:px-6">
+      <div className="flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <h1 className="text-[40px] font-bold tracking-tight text-gray-900 sm:text-[52px]">{title}</h1>
+        <p className="mt-4 max-w-[700px] text-[20px] font-medium text-gray-500">{description}</p>
+        
+        <div className="mt-12 w-full max-w-2xl flex flex-col items-center">
+           {children}
+        </div>
       </div>
     </main>
   );

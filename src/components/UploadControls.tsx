@@ -37,10 +37,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
       onDragOver={handleDrag}
       onDrop={handleDrop}
       className={cn(
-        'relative rounded-[28px] border border-dashed p-8 text-center transition-all',
-        'border-[rgba(201,156,132,0.2)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,242,0.88))]',
-        'shadow-[0_18px_38px_rgba(188,140,108,0.08)] hover:border-[rgba(207,132,95,0.32)] hover:shadow-[0_22px_44px_rgba(188,140,108,0.12)]',
-        isDragActive && 'border-[var(--accent-strong)] bg-[linear-gradient(180deg,rgba(255,255,255,1),rgba(255,244,236,0.96))]'
+        'relative flex flex-col items-center justify-center p-12 transition-all w-full'
       )}
     >
       <input
@@ -48,13 +45,19 @@ export const FilePicker: React.FC<FilePickerProps> = ({ onFilesSelected, accept,
         multiple={multiple}
         accept={accept}
         onChange={(e) => e.target.files && onFilesSelected(Array.from(e.target.files))}
-        className="absolute inset-0 cursor-pointer opacity-0"
+        className="absolute inset-0 cursor-pointer opacity-0 z-20"
       />
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[20px] border border-[rgba(206,155,128,0.18)] bg-[linear-gradient(180deg,#fffdfb,#fff4ec)] text-[var(--accent-strong)] shadow-[0_10px_22px_rgba(191,141,111,0.12)]">
-        <Upload className="h-4 w-4" />
+      
+      <div className="relative flex items-center justify-center">
+        <div className={cn(
+          "flex items-center justify-center rounded-xl bg-[#e5322d] text-white px-10 py-5 text-[28px] font-semibold tracking-wide transition-transform hover:scale-105 shadow-[0_8px_20px_rgba(229,50,45,0.4)] hover:shadow-[0_12px_28px_rgba(229,50,45,0.5)] z-10 w-full sm:w-auto min-w-[280px]",
+          isDragActive && "scale-105"
+        )}>
+          Select files
+        </div>
       </div>
-      <p className="mt-4 text-[15px] font-semibold text-[var(--fg)]">Drop files here or click to upload</p>
-      <p className="mt-1 text-sm text-[var(--muted)]">{multiple ? 'Multiple files supported' : 'Single file mode'}</p>
+      
+      <p className="mt-4 text-[14px] text-gray-500 font-medium">or drop files here</p>
     </div>
   );
 };
