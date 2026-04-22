@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-4 py-16 sm:px-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
           <Link to="/" className="inline-flex items-center gap-2.5 text-gray-900">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 text-white">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#e5322d] text-white">
               <LayoutGrid className="h-4 w-4" strokeWidth={2.5} />
             </span>
             <span className="text-[17px] font-black tracking-tight">YuTools</span>
@@ -56,14 +56,14 @@ export const Footer: React.FC = () => {
         <div className="flex flex-wrap gap-16 text-[15px] text-gray-500">
           <div className="flex flex-col gap-4">
             <span className="font-bold text-gray-900 uppercase tracking-widest text-xs">Solutions</span>
-            <Link to="/tools" className="hover:text-red-500 font-medium transition-colors">All tools</Link>
-            <Link to="/tools/jpg-to-pdf" className="hover:text-red-500 font-medium transition-colors">JPG to PDF</Link>
-            <Link to="/tools/compress-image" className="hover:text-red-500 font-medium transition-colors">Compress Image</Link>
+            <Link to="/tools" className="hover:text-[#e5322d] font-medium transition-colors">All tools</Link>
+            <Link to="/tools/jpg-to-pdf" className="hover:text-[#e5322d] font-medium transition-colors">JPG to PDF</Link>
+            <Link to="/tools/compress-image" className="hover:text-[#e5322d] font-medium transition-colors">Compress Image</Link>
           </div>
           <div className="flex flex-col gap-4">
             <span className="font-bold text-gray-900 uppercase tracking-widest text-xs">Company</span>
-            <Link to="/about" className="hover:text-red-500 font-medium transition-colors">About Us</Link>
-            <Link to="/privacy" className="hover:text-red-500 font-medium transition-colors">Privacy Policy</Link>
+            <Link to="/about" className="hover:text-[#e5322d] font-medium transition-colors">About Us</Link>
+            <Link to="/privacy" className="hover:text-[#e5322d] font-medium transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </div>

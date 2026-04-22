@@ -28,7 +28,7 @@ export const WelcomePage: React.FC = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="mb-8 flex justify-center"
         >
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-red-500 text-white shadow-xl">
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[#e5322d] text-white shadow-xl">
             <LayoutGrid className="h-10 w-10" strokeWidth={2} />
           </div>
         </motion.div>
