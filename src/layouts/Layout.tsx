@@ -1,35 +1,35 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Command, Box } from 'lucide-react';
+import { Command, LayoutGrid } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border-soft)] bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="inline-flex items-center gap-2 text-[var(--fg)] transition hover:opacity-80">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[var(--fg)]">
-            <Box className="h-4 w-4 text-white" />
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
+      <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-4 sm:px-6">
+        <Link to="/" className="inline-flex items-center gap-2.5 text-gray-900 transition hover:opacity-80">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 text-white shadow-sm">
+            <LayoutGrid className="h-4 w-4" strokeWidth={2.5} />
           </span>
-          <span className="text-base font-bold tracking-tight">YuTools</span>
+          <span className="text-[17px] font-black tracking-tight">YuTools</span>
         </Link>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
           <nav className="hidden sm:flex items-center gap-6">
             {[
-              ['Tools', '/tools'],
-              ['About', '/about'],
-              ['Privacy', '/privacy'],
+              ['pdf tools', '/tools'],
+              ['image tools', '/tools?category=Image'],
+              ['all tools', '/tools'],
             ].map(([label, href]) => (
               <NavLink
-                key={href}
+                key={label}
                 to={href}
                 className={({ isActive }) =>
                   cn(
-                    'text-sm font-medium transition-colors',
+                    'text-[15px] font-bold uppercase tracking-wide transition-colors',
                     isActive
-                      ? 'text-[var(--accent-strong)]'
-                      : 'text-[var(--muted)] hover:text-[var(--fg)]'
+                      ? 'text-red-500'
+                      : 'text-gray-600 hover:text-gray-900'
                   )
                 }
               >
@@ -37,12 +37,6 @@ export const Header: React.FC = () => {
               </NavLink>
             ))}
           </nav>
-          <div className="flex items-center gap-2 border-l border-[var(--border-soft)] pl-6">
-            <span className="hidden items-center gap-1.5 rounded-md border border-[var(--border-soft)] bg-[var(--surface-soft)] px-2 py-1 text-[12px] font-medium text-[var(--muted)] sm:inline-flex">
-              <Command className="h-3 w-3" />
-              Ctrl+K
-            </span>
-          </div>
         </div>
       </div>
     </header>
@@ -51,35 +45,35 @@ export const Header: React.FC = () => {
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-20 border-t border-[var(--border-soft)] bg-white">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
-        <div className="max-w-xs">
-          <Link to="/" className="inline-flex items-center gap-2 text-[var(--fg)]">
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded bg-[var(--fg)]">
-              <Box className="h-3.5 w-3.5 text-white" />
+    <footer className="mt-24 border-t border-gray-200 bg-gray-50">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-4 py-16 sm:px-6 md:flex-row md:items-start md:justify-between">
+        <div className="max-w-sm">
+          <Link to="/" className="inline-flex items-center gap-2.5 text-gray-900">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 text-white">
+              <LayoutGrid className="h-4 w-4" strokeWidth={2.5} />
             </span>
-            <span className="text-sm font-bold">YuTools</span>
+            <span className="text-[17px] font-black tracking-tight">YuTools</span>
           </Link>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-            A comprehensive suite of browser utilities for files, images, and technical tasks.
+          <p className="mt-4 text-[15px] leading-relaxed text-gray-500 font-medium">
+            Every tool you need to work with PDFs, Images, and more in one place. 100% Free.
           </p>
         </div>
-        <div className="flex flex-wrap gap-12 text-sm text-[var(--muted)]">
-          <div className="flex flex-col gap-3">
-            <span className="font-semibold text-[var(--fg)]">Tools</span>
-            <Link to="/tools" className="hover:text-[var(--accent-strong)] transition-colors">All tools</Link>
-            <Link to="/tools/jpg-to-pdf" className="hover:text-[var(--accent-strong)] transition-colors">JPG to PDF</Link>
-            <Link to="/tools/compress-image" className="hover:text-[var(--accent-strong)] transition-colors">Compress Image</Link>
+        <div className="flex flex-wrap gap-16 text-[15px] text-gray-500">
+          <div className="flex flex-col gap-4">
+            <span className="font-bold text-gray-900 uppercase tracking-widest text-xs">Solutions</span>
+            <Link to="/tools" className="hover:text-red-500 font-medium transition-colors">All tools</Link>
+            <Link to="/tools/jpg-to-pdf" className="hover:text-red-500 font-medium transition-colors">JPG to PDF</Link>
+            <Link to="/tools/compress-image" className="hover:text-red-500 font-medium transition-colors">Compress Image</Link>
           </div>
-          <div className="flex flex-col gap-3">
-            <span className="font-semibold text-[var(--fg)]">Legal</span>
-            <Link to="/privacy" className="hover:text-[var(--accent-strong)] transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-[var(--accent-strong)] transition-colors">Terms of Service</Link>
+          <div className="flex flex-col gap-4">
+            <span className="font-bold text-gray-900 uppercase tracking-widest text-xs">Company</span>
+            <Link to="/about" className="hover:text-red-500 font-medium transition-colors">About Us</Link>
+            <Link to="/privacy" className="hover:text-red-500 font-medium transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </div>
-      <div className="border-t border-[var(--border-soft)] py-6">
-        <div className="mx-auto w-full max-w-[1200px] px-4 text-xs text-[var(--muted-dim)] sm:px-6">
+      <div className="border-t border-gray-200/60 py-6">
+        <div className="mx-auto w-full max-w-[1200px] px-4 text-[13px] font-medium text-gray-400 sm:px-6">
           © {new Date().getFullYear()} YuTools. Local-first when possible.
         </div>
       </div>

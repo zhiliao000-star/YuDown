@@ -310,26 +310,33 @@ const filterTools = (query: string, category: ToolCategory) => {
   });
 };
 
+const getCategoryStyle = (category: ToolCategory) => {
+  switch (category) {
+    case 'PDF':
+      return 'text-red-500 bg-red-50 group-hover:bg-red-500 group-hover:text-white';
+    case 'Image':
+      return 'text-sky-500 bg-sky-50 group-hover:bg-sky-500 group-hover:text-white';
+    case 'Utility':
+      return 'text-indigo-500 bg-indigo-50 group-hover:bg-indigo-500 group-hover:text-white';
+    default:
+      return 'text-gray-500 bg-gray-50 group-hover:bg-gray-500 group-hover:text-white';
+  }
+};
+
 const ToolCard = ({ tool, index }: { tool: ToolItem; index: number }) => {
   const content = (
     <>
-      <div className="flex items-start justify-between gap-3">
-        <span className="tool-icon">
-          <tool.icon className="h-5 w-5" />
-        </span>
-        <span className="text-[11px] font-semibold text-[var(--muted-dim)]">{tool.category}</span>
+      <div className={cn("flex h-14 w-14 items-center justify-center rounded-xl mb-5 transition-colors duration-300", getCategoryStyle(tool.category))}>
+        <tool.icon className="h-7 w-7" strokeWidth={1.5} />
       </div>
-      <h3 className="mt-4 text-base font-semibold text-[var(--fg)]">{tool.name}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{tool.description}</p>
+      <h3 className="text-lg font-bold text-gray-900 group-hover:text-[var(--accent-strong)] transition-colors">{tool.name}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-gray-500">{tool.description}</p>
     </>
   );
 
   return (
-    <Link to={tool.path} className="tool-card group animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}>
+    <Link to={tool.path} className="group relative flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:border-transparent transition-all duration-300 animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 30}ms`, animationFillMode: 'both' }}>
       {content}
-      <div className="absolute right-4 bottom-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-         <ArrowUpRight className="h-4 w-4 text-[var(--accent-strong)]" />
-      </div>
     </Link>
   );
 };
@@ -358,65 +365,56 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
     <section className={cn('mx-auto w-full max-w-[1200px]', compact ? 'mt-4' : 'mt-12')}>
       <div className={cn('relative max-w-4xl mx-auto', !compact && 'text-center')}>
         {!compact && (
-          <div className="mb-10">
-            <h1 className="text-4xl font-extrabold tracking-tight text-[var(--fg)] sm:text-5xl lg:text-6xl">
-              Every tool you need.<br/>
-              <span className="text-[var(--muted)]">Right in your browser.</span>
+          <div className="mb-12">
+            <h1 className="text-4xl font-black tracking-tight text-gray-900 sm:text-5xl lg:text-[54px] leading-tight">
+              Every tool you need to work <br className="hidden sm:block"/> with files in one place.
             </h1>
-            <p className="mt-6 text-lg leading-8 text-[var(--muted)] max-w-2xl mx-auto">
-              Simple, fast, and local-first utilities for files, images, and daily technical tasks. No signups or server uploads required for most tasks.
+            <p className="mt-6 text-xl text-gray-500 max-w-2xl mx-auto font-medium">
+              100% Free and Local. Merge, convert, and compress files directly in your browser without any server uploads.
             </p>
           </div>
         )}
 
         <div className={cn('relative max-w-2xl mx-auto', compact ? 'mt-0' : 'mt-8')}>
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted-dim)]" />
+          <Search className="pointer-events-none absolute left-5 top-1/2 h-6 w-6 -translate-y-1/2 text-gray-400" />
           <input
             ref={inputRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search tools... (Press '/' to focus)"
-            className="search-bar shadow-sm"
+            placeholder="Search for a tool..."
+            className="h-16 w-full rounded-2xl border border-gray-200 bg-white pl-14 pr-6 text-lg text-gray-900 shadow-[0_8px_30px_rgb(0,0,0,0.04)] outline-none transition-all placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
           />
         </div>
-
-        {!compact && (
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
-            {QUICK_LAUNCH.map((label) => {
-              const tool = TOOL_ITEMS.find((item) => item.name === label);
-              if (!tool) return null;
-
-              return (
-                <Link key={label} to={tool.path} className="quick-chip">
-                  {label}
-                </Link>
-              );
-            })}
-          </div>
-        )}
       </div>
 
-      <div className="mt-16 sm:mt-20">
-         <div className="mb-8 flex flex-wrap items-center justify-center gap-2 border-b border-[var(--border-soft)] pb-4">
+      <div className="mt-16 sm:mt-24">
+         <div className="mb-10 flex flex-wrap items-center justify-center gap-2">
           {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setCategory(tab)}
-              className={cn('filter-chip', category === tab ? 'text-[var(--fg)] border-b-2 border-[var(--accent-strong)] rounded-none bg-transparent' : 'text-[var(--muted)] hover:text-[var(--fg)] hover:bg-transparent')}
+              className={cn(
+                'rounded-full px-6 py-2.5 text-sm font-bold transition-all',
+                category === tab 
+                  ? 'bg-gray-900 text-white shadow-md' 
+                  : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900 border border-gray-200'
+              )}
             >
-              {tab}
+              {tab} Tools
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {tools.map((tool, index) => (
             <ToolCard key={tool.path} tool={tool} index={index} />
           ))}
         </div>
 
         {tools.length === 0 && (
-          <div className="empty-state mt-8">No tools matched your search.</div>
+          <div className="rounded-2xl border border-gray-200 bg-white py-16 text-center text-lg font-medium text-gray-500">
+            No tools matched your search for "{query}".
+          </div>
         )}
       </div>
     </section>
