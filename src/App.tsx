@@ -315,22 +315,21 @@ const ToolCard = ({ tool, index }: { tool: ToolItem; index: number }) => {
     <>
       <div className="flex items-start justify-between gap-3">
         <span className="tool-icon">
-          <tool.icon className="h-4 w-4" />
+          <tool.icon className="h-5 w-5" />
         </span>
-        <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-dim)]">{tool.category}</span>
+        <span className="text-[11px] font-semibold text-[var(--muted-dim)]">{tool.category}</span>
       </div>
-      <h3 className="mt-4 text-sm font-medium text-[var(--fg)]">{tool.name}</h3>
-      <p className="mt-1.5 text-xs leading-5 text-[var(--muted)]">{tool.description}</p>
-      <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[var(--fg-soft)]">
-        <span>{tool.available ? 'Open' : 'Soon'}</span>
-        <ArrowUpRight className="h-3 w-3" />
-      </div>
+      <h3 className="mt-4 text-base font-semibold text-[var(--fg)]">{tool.name}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{tool.description}</p>
     </>
   );
 
   return (
-    <Link to={tool.path} className={cn('tool-card fade-up-soft', `stagger-${(index % 6) + 1}`)}>
+    <Link to={tool.path} className="tool-card group animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}>
       {content}
+      <div className="absolute right-4 bottom-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+         <ArrowUpRight className="h-4 w-4 text-[var(--accent-strong)]" />
+      </div>
     </Link>
   );
 };
@@ -356,40 +355,33 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
   const tools = filterTools(deferredQuery, category);
 
   return (
-    <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-8')}>
-      <div className={cn('relative', !compact && 'hero-reveal')}>
+    <section className={cn('mx-auto w-full max-w-[1200px]', compact ? 'mt-4' : 'mt-12')}>
+      <div className={cn('relative max-w-4xl mx-auto', !compact && 'text-center')}>
         {!compact && (
-          <>
-            <div className="hero-orb" />
-            <div className="hero-orb-right" />
-          </>
-        )}
-        {!compact && (
-          <div className="max-w-[640px]">
-            <p className="eyebrow">quiet utility workspace</p>
-            <h1 className="mt-3 text-balance text-[28px] font-semibold leading-[1.05] text-[var(--fg)] sm:text-[38px]">
-              Gentle tools for files, images, and quick tasks.
+          <div className="mb-10">
+            <h1 className="text-4xl font-extrabold tracking-tight text-[var(--fg)] sm:text-5xl lg:text-6xl">
+              Every tool you need.<br/>
+              <span className="text-[var(--muted)]">Right in your browser.</span>
             </h1>
-            <p className="mt-3 max-w-[560px] text-sm leading-6 text-[var(--muted)]">
-              Search, open, and finish the task with as little friction as possible.
+            <p className="mt-6 text-lg leading-8 text-[var(--muted)] max-w-2xl mx-auto">
+              Simple, fast, and local-first utilities for files, images, and daily technical tasks. No signups or server uploads required for most tasks.
             </p>
           </div>
         )}
 
-        <div className={cn('relative', compact ? 'mt-0' : 'mt-8')}>
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-dim)]" />
+        <div className={cn('relative max-w-2xl mx-auto', compact ? 'mt-0' : 'mt-8')}>
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted-dim)]" />
           <input
             ref={inputRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search tools"
-            className="search-bar"
+            placeholder="Search tools... (Press '/' to focus)"
+            className="search-bar shadow-sm"
           />
-          <span className="search-hint">/</span>
         </div>
 
         {!compact && (
-          <div className="mt-5 flex flex-wrap gap-2 fade-up-soft stagger-2">
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
             {QUICK_LAUNCH.map((label) => {
               const tool = TOOL_ITEMS.find((item) => item.name === label);
               if (!tool) return null;
@@ -402,27 +394,29 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
             })}
           </div>
         )}
+      </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-2 fade-up-soft stagger-3">
+      <div className="mt-16 sm:mt-20">
+         <div className="mb-8 flex flex-wrap items-center justify-center gap-2 border-b border-[var(--border-soft)] pb-4">
           {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setCategory(tab)}
-              className={cn('filter-chip', category === tab && 'filter-chip-active')}
+              className={cn('filter-chip', category === tab ? 'text-[var(--fg)] border-b-2 border-[var(--accent-strong)] rounded-none bg-transparent' : 'text-[var(--muted)] hover:text-[var(--fg)] hover:bg-transparent')}
             >
               {tab}
             </button>
           ))}
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {tools.map((tool, index) => (
             <ToolCard key={tool.path} tool={tool} index={index} />
           ))}
         </div>
 
         {tools.length === 0 && (
-          <div className="empty-state mt-5">No tools matched your search.</div>
+          <div className="empty-state mt-8">No tools matched your search.</div>
         )}
       </div>
     </section>

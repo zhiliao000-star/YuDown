@@ -1,21 +1,21 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Sparkles, Wrench } from 'lucide-react';
+import { Command, Box } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border-soft)] bg-[color:var(--bg-overlay)] backdrop-blur-xl">
-      <div className="mx-auto flex h-14 w-full max-w-[1100px] items-center justify-between px-4 sm:px-5">
-        <Link to="/" className="inline-flex items-center gap-2.5 text-sm font-medium tracking-[0.02em] text-[var(--fg)]">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--border-soft)] bg-[var(--surface-raised)] shadow-[var(--shadow-soft)]">
-            <Wrench className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
+    <header className="sticky top-0 z-50 border-b border-[var(--border-soft)] bg-white/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between px-4 sm:px-6">
+        <Link to="/" className="inline-flex items-center gap-2 text-[var(--fg)] transition hover:opacity-80">
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[var(--fg)]">
+            <Box className="h-4 w-4 text-white" />
           </span>
-          <span className="text-[15px] font-semibold tracking-tight">YuTools</span>
+          <span className="text-base font-bold tracking-tight">YuTools</span>
         </Link>
 
-        <div className="flex items-center gap-2">
-          <nav className="flex items-center gap-1 rounded-full border border-[var(--border-soft)] bg-[var(--surface-raised)]/90 px-1.5 py-1 shadow-[var(--shadow-soft)]">
+        <div className="flex items-center gap-6">
+          <nav className="hidden sm:flex items-center gap-6">
             {[
               ['Tools', '/tools'],
               ['About', '/about'],
@@ -26,10 +26,10 @@ export const Header: React.FC = () => {
                 to={href}
                 className={({ isActive }) =>
                   cn(
-            'rounded-full px-3 py-1.5 text-[11px] transition-colors',
+                    'text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-white text-[var(--fg)]'
-                      : 'text-[var(--muted)] hover:text-[var(--fg-soft)]'
+                      ? 'text-[var(--accent-strong)]'
+                      : 'text-[var(--muted)] hover:text-[var(--fg)]'
                   )
                 }
               >
@@ -37,10 +37,12 @@ export const Header: React.FC = () => {
               </NavLink>
             ))}
           </nav>
-          <span className="hidden items-center gap-1.5 rounded-full border border-[var(--border-soft)] bg-[var(--surface-raised)] px-3 py-1.5 text-[11px] text-[var(--muted)] shadow-[var(--shadow-soft)] sm:inline-flex">
-            <Sparkles className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
-            Soft light
-          </span>
+          <div className="flex items-center gap-2 border-l border-[var(--border-soft)] pl-6">
+            <span className="hidden items-center gap-1.5 rounded-md border border-[var(--border-soft)] bg-[var(--surface-soft)] px-2 py-1 text-[12px] font-medium text-[var(--muted)] sm:inline-flex">
+              <Command className="h-3 w-3" />
+              Ctrl+K
+            </span>
+          </div>
         </div>
       </div>
     </header>
@@ -49,24 +51,37 @@ export const Header: React.FC = () => {
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-16 border-t border-[var(--border-soft)]">
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6 px-4 py-8 sm:px-5 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-md">
-          <p className="text-sm font-medium text-[var(--fg)]">YuTools</p>
-          <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
-            Simple browser utilities for files, images, and small technical tasks.
+    <footer className="mt-20 border-t border-[var(--border-soft)] bg-white">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
+        <div className="max-w-xs">
+          <Link to="/" className="inline-flex items-center gap-2 text-[var(--fg)]">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded bg-[var(--fg)]">
+              <Box className="h-3.5 w-3.5 text-white" />
+            </span>
+            <span className="text-sm font-bold">YuTools</span>
+          </Link>
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            A comprehensive suite of browser utilities for files, images, and technical tasks.
           </p>
         </div>
-        <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-[var(--muted)]">
-          <Link to="/tools" className="hover:text-[var(--fg-soft)]">All tools</Link>
-          <Link to="/tools/jpg-to-pdf" className="hover:text-[var(--fg-soft)]">JPG to PDF</Link>
-          <Link to="/tools/compress-image" className="hover:text-[var(--fg-soft)]">Compress Image</Link>
-          <Link to="/tools/qr-code-generator" className="hover:text-[var(--fg-soft)]">QR Code</Link>
-          <Link to="/privacy" className="hover:text-[var(--fg-soft)]">Privacy</Link>
+        <div className="flex flex-wrap gap-12 text-sm text-[var(--muted)]">
+          <div className="flex flex-col gap-3">
+            <span className="font-semibold text-[var(--fg)]">Tools</span>
+            <Link to="/tools" className="hover:text-[var(--accent-strong)] transition-colors">All tools</Link>
+            <Link to="/tools/jpg-to-pdf" className="hover:text-[var(--accent-strong)] transition-colors">JPG to PDF</Link>
+            <Link to="/tools/compress-image" className="hover:text-[var(--accent-strong)] transition-colors">Compress Image</Link>
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="font-semibold text-[var(--fg)]">Legal</span>
+            <Link to="/privacy" className="hover:text-[var(--accent-strong)] transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-[var(--accent-strong)] transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
-      <div className="mx-auto w-full max-w-[1100px] px-4 pb-8 text-[11px] text-[var(--muted-dim)] sm:px-5">
-        © {new Date().getFullYear()} YuTools. Local-first when possible.
+      <div className="border-t border-[var(--border-soft)] py-6">
+        <div className="mx-auto w-full max-w-[1200px] px-4 text-xs text-[var(--muted-dim)] sm:px-6">
+          © {new Date().getFullYear()} YuTools. Local-first when possible.
+        </div>
       </div>
     </footer>
   );
