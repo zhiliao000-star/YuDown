@@ -1,11 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, LayoutGrid } from 'lucide-react';
 
 export const WelcomePage: React.FC = () => {
-  const { t } = useTranslation();
 
   return (
     <div className="flex min-h-[85vh] flex-col items-center justify-center bg-white px-4">
@@ -39,9 +37,9 @@ export const WelcomePage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="text-5xl font-black tracking-tight text-gray-900 sm:text-7xl lg:text-[80px]"
+          className="text-5xl font-black tracking-tight text-gray-900 sm:text-7xl lg:text-[80px] leading-tight"
         >
-          {t('welcome.title')}
+          Your Files, Your Rules.
         </motion.h1>
 
         <motion.p
@@ -50,7 +48,7 @@ export const WelcomePage: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
           className="mt-8 text-xl font-medium text-gray-500 sm:text-2xl max-w-2xl mx-auto"
         >
-          {t('welcome.subtitle')}
+          The ultimate web-based suite for all your document needs. Free, Fast, and Secure.
         </motion.p>
 
         <motion.div
@@ -63,7 +61,7 @@ export const WelcomePage: React.FC = () => {
             to="/tools"
             className="group flex h-14 items-center justify-center gap-2 rounded-full bg-[#e5322d] px-8 text-lg font-bold text-white shadow-[0_8px_20px_rgba(229,50,45,0.4)] transition-all hover:bg-[#c82b27] hover:shadow-[0_12px_28px_rgba(229,50,45,0.5)] hover:-translate-y-1"
           >
-            {t('welcome.getStarted')}
+            Get Started
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
         </motion.div>

@@ -1,22 +1,15 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { LayoutGrid, Globe } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { LayoutGrid, Github } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const Header: React.FC = () => {
-  const { t, i18n } = useTranslation();
-
-  const toggleLanguage = () => {
-    const nextLng = i18n.language === 'en' ? 'zh' : 'en';
-    i18n.changeLanguage(nextLng);
-  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
       <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-4 sm:px-6">
         <Link to="/" className="inline-flex items-center gap-2.5 text-gray-900 transition hover:opacity-80">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 text-white shadow-sm">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#e5322d] text-white shadow-sm">
             <LayoutGrid className="h-4 w-4" strokeWidth={2.5} />
           </span>
           <span className="text-[17px] font-black tracking-tight">YuTools</span>
@@ -24,21 +17,21 @@ export const Header: React.FC = () => {
 
         <div className="flex items-center gap-8">
           <nav className="hidden sm:flex items-center gap-6">
-            <NavLink to="/tools" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-red-500' : 'text-gray-600 hover:text-gray-900')}>
-              {t('nav.tools')}
+            <NavLink to="/tools" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-[#e5322d]' : 'text-gray-600 hover:text-gray-900')}>
+              All Tools
             </NavLink>
-            <NavLink to="/about" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-red-500' : 'text-gray-600 hover:text-gray-900')}>
-              {t('nav.about')}
+            <NavLink to="/about" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-[#e5322d]' : 'text-gray-600 hover:text-gray-900')}>
+              About
             </NavLink>
           </nav>
           
-          <button 
-            onClick={toggleLanguage}
+          <a 
+            href="#"
             className="flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
           >
-            <Globe className="h-4 w-4" />
-            {i18n.language === 'zh' ? 'EN' : '中文'}
-          </button>
+            <Github className="h-4 w-4" />
+            GitHub
+          </a>
         </div>
       </div>
     </header>

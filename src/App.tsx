@@ -377,7 +377,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
               Every tool you need to work with files in one place
             </h1>
             <p className="mt-8 text-[22px] text-gray-500 max-w-3xl mx-auto font-medium leading-relaxed">
-              Every tool you need to use PDFs, images, and dev tools, at your fingertips. All are 100% FREE and easy to use! Merge, split, compress, convert, and more.
+              100% Free and Local. Merge, convert, and compress files directly in your browser without any server uploads.
             </p>
           </div>
         )}
@@ -395,6 +395,23 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
       </div>
 
       <div className="mt-16 sm:mt-24 px-4 sm:px-8">
+        <div className="mb-10 flex flex-wrap items-center justify-center gap-3">
+          {(['All', 'PDF', 'Image', 'Utility'] as ToolCategory[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setCategory(tab)}
+              className={cn(
+                'rounded-full px-6 py-2.5 text-sm font-bold transition-all',
+                category === tab 
+                  ? 'bg-gray-900 text-white shadow-md' 
+                  : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900 border border-gray-200'
+              )}
+            >
+              {tab === 'All' ? 'All Tools' : `${tab} Tools`}
+            </button>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {tools.map((tool, index) => (
             <ToolCard key={tool.path} tool={tool} index={index} />
