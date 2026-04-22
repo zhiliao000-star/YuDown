@@ -284,6 +284,8 @@ const TOOL_ITEMS: ToolItem[] = [
 
 const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'PDF to JPG', 'QR Code', 'JSON Formatter'];
 
+const WelcomePageLazy = lazy(() => import('./pages/Welcome').then((module) => ({ default: module.WelcomePage })));
+
 const RouteLoading = () => (
   <main className="mx-auto w-full max-w-[1100px] px-4 pb-10 pt-6 sm:px-5">
     <div className="panel fade-up-soft p-6">
@@ -411,14 +413,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
 
 const HomePage = () => {
   return (
-    <main className="mx-auto w-full max-w-[1100px] px-4 pb-10 pt-6 sm:px-5">
-      <Launcher />
-
-      <div className="trust-strip mt-4">
-        Runs in your browser when possible. Quiet by default. No signup.
-      </div>
-
-    </main>
+    <WelcomePageLazy />
   );
 };
 

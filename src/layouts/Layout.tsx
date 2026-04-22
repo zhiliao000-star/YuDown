@@ -1,9 +1,17 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Command, LayoutGrid } from 'lucide-react';
+import { LayoutGrid, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../lib/utils';
 
 export const Header: React.FC = () => {
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const nextLng = i18n.language === 'en' ? 'zh' : 'en';
+    i18n.changeLanguage(nextLng);
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
       <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-4 sm:px-6">
@@ -16,27 +24,21 @@ export const Header: React.FC = () => {
 
         <div className="flex items-center gap-8">
           <nav className="hidden sm:flex items-center gap-6">
-            {[
-              ['pdf tools', '/tools'],
-              ['image tools', '/tools?category=Image'],
-              ['all tools', '/tools'],
-            ].map(([label, href]) => (
-              <NavLink
-                key={label}
-                to={href}
-                className={({ isActive }) =>
-                  cn(
-                    'text-[15px] font-bold uppercase tracking-wide transition-colors',
-                    isActive
-                      ? 'text-red-500'
-                      : 'text-gray-600 hover:text-gray-900'
-                  )
-                }
-              >
-                {label}
-              </NavLink>
-            ))}
+            <NavLink to="/tools" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-red-500' : 'text-gray-600 hover:text-gray-900')}>
+              {t('nav.tools')}
+            </NavLink>
+            <NavLink to="/about" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-red-500' : 'text-gray-600 hover:text-gray-900')}>
+              {t('nav.about')}
+            </NavLink>
           </nav>
+          
+          <button 
+            onClick={toggleLanguage}
+            className="flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm font-bold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+          >
+            <Globe className="h-4 w-4" />
+            {i18n.language === 'zh' ? 'EN' : '中文'}
+          </button>
         </div>
       </div>
     </header>
