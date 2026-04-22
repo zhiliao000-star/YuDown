@@ -1,21 +1,21 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Sparkles, Wrench } from 'lucide-react';
+import { Wrench } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border-soft)] bg-[color:var(--bg-overlay)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-[var(--border-soft)] bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 w-full max-w-[1100px] items-center justify-between px-4 sm:px-5">
         <Link to="/" className="inline-flex items-center gap-2.5 text-sm font-medium tracking-[0.02em] text-[var(--fg)]">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--border-soft)] bg-[var(--surface-raised)] shadow-[var(--shadow-soft)]">
-            <Wrench className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border-soft)] bg-white shadow-sm">
+            <Wrench className="h-4 w-4 text-[var(--accent-soft)]" />
           </span>
           <span className="text-[15px] font-semibold tracking-tight">YuTools</span>
         </Link>
 
         <div className="flex items-center gap-2">
-          <nav className="flex items-center gap-1 rounded-full border border-[var(--border-soft)] bg-[var(--surface-raised)]/90 px-1.5 py-1 shadow-[var(--shadow-soft)]">
+          <nav className="flex items-center gap-1 rounded-lg border border-[var(--border-soft)] bg-white/90 px-1.5 py-1 shadow-sm">
             {[
               ['Tools', '/tools'],
               ['About', '/about'],
@@ -26,9 +26,9 @@ export const Header: React.FC = () => {
                 to={href}
                 className={({ isActive }) =>
                   cn(
-            'rounded-full px-3 py-1.5 text-[11px] transition-colors',
+            'rounded-md px-3 py-1.5 text-xs transition-colors',
                     isActive
-                      ? 'bg-white text-[var(--fg)]'
+                      ? 'bg-gray-100 text-[var(--fg)] font-medium'
                       : 'text-[var(--muted)] hover:text-[var(--fg-soft)]'
                   )
                 }
@@ -37,10 +37,6 @@ export const Header: React.FC = () => {
               </NavLink>
             ))}
           </nav>
-          <span className="hidden items-center gap-1.5 rounded-full border border-[var(--border-soft)] bg-[var(--surface-raised)] px-3 py-1.5 text-[11px] text-[var(--muted)] shadow-[var(--shadow-soft)] sm:inline-flex">
-            <Sparkles className="h-3.5 w-3.5 text-[var(--accent-soft)]" />
-            Soft light
-          </span>
         </div>
       </div>
     </header>
