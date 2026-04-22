@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy, useDeferredValue } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import {
   ArrowUpRight,
@@ -13,35 +13,36 @@ import {
   WandSparkles,
 } from 'lucide-react';
 import { Header, Footer } from './layouts/Layout';
-import { AddPageNumbersToPDF } from './pages/tools/AddPageNumbersToPDF';
-import { Base64Tool } from './pages/tools/Base64Tool';
-import { BlurRedactImage } from './pages/tools/BlurRedactImage';
-import { CompressPDF } from './pages/tools/CompressPDF';
-import { CompressImage } from './pages/tools/CompressImage';
-import { CropImage } from './pages/tools/CropImage';
-import { HEICToJPG } from './pages/tools/HEICToJPG';
-import { ImageConverter } from './pages/tools/ImageConverter';
-import { JSONFormatter } from './pages/tools/JSONFormatter';
-import { JPGToPDF } from './pages/tools/JPGToPDF';
-import { MergePDF } from './pages/tools/MergePDF';
-import { OCRPDF } from './pages/tools/OCRPDF';
-import { PDFProtectUnlock } from './pages/tools/PDFProtectUnlock';
-import { PDFToJPG } from './pages/tools/PDFToJPG';
-import { PNGToSVG } from './pages/tools/PNGToSVG';
-import { QRCodeScanner } from './pages/tools/QRCodeScanner';
-import { QRCodeGenerator } from './pages/tools/QRCodeGenerator';
-import { ReorderPDFPages } from './pages/tools/ReorderPDFPages';
-import { ResizeImage } from './pages/tools/ResizeImage';
-import { RotatePDF } from './pages/tools/RotatePDF';
-import { ScreenshotToText } from './pages/tools/ScreenshotToText';
-import { SplitPDF } from './pages/tools/SplitPDF';
-import { SVGToPNG } from './pages/tools/SVGToPNG';
-import { TimestampConverter } from './pages/tools/TimestampConverter';
-import { URLEncodeDecode } from './pages/tools/URLEncodeDecode';
-import { UUIDGenerator } from './pages/tools/UUIDGenerator';
-import { WatermarkImage } from './pages/tools/WatermarkImage';
-import { WordCounter } from './pages/tools/WordCounter';
 import { cn } from './lib/utils';
+
+const JPGToPDF = lazy(() => import('./pages/tools/JPGToPDF').then((module) => ({ default: module.JPGToPDF })));
+const SplitPDF = lazy(() => import('./pages/tools/SplitPDF').then((module) => ({ default: module.SplitPDF })));
+const MergePDF = lazy(() => import('./pages/tools/MergePDF').then((module) => ({ default: module.MergePDF })));
+const CompressPDF = lazy(() => import('./pages/tools/CompressPDF').then((module) => ({ default: module.CompressPDF })));
+const PDFToJPG = lazy(() => import('./pages/tools/PDFToJPG').then((module) => ({ default: module.PDFToJPG })));
+const CompressImage = lazy(() => import('./pages/tools/CompressImage').then((module) => ({ default: module.CompressImage })));
+const HEICToJPG = lazy(() => import('./pages/tools/HEICToJPG').then((module) => ({ default: module.HEICToJPG })));
+const ResizeImage = lazy(() => import('./pages/tools/ResizeImage').then((module) => ({ default: module.ResizeImage })));
+const CropImage = lazy(() => import('./pages/tools/CropImage').then((module) => ({ default: module.CropImage })));
+const WatermarkImage = lazy(() => import('./pages/tools/WatermarkImage').then((module) => ({ default: module.WatermarkImage })));
+const BlurRedactImage = lazy(() => import('./pages/tools/BlurRedactImage').then((module) => ({ default: module.BlurRedactImage })));
+const QRCodeGenerator = lazy(() => import('./pages/tools/QRCodeGenerator').then((module) => ({ default: module.QRCodeGenerator })));
+const QRCodeScanner = lazy(() => import('./pages/tools/QRCodeScanner').then((module) => ({ default: module.QRCodeScanner })));
+const JSONFormatter = lazy(() => import('./pages/tools/JSONFormatter').then((module) => ({ default: module.JSONFormatter })));
+const URLEncodeDecode = lazy(() => import('./pages/tools/URLEncodeDecode').then((module) => ({ default: module.URLEncodeDecode })));
+const WordCounter = lazy(() => import('./pages/tools/WordCounter').then((module) => ({ default: module.WordCounter })));
+const UUIDGenerator = lazy(() => import('./pages/tools/UUIDGenerator').then((module) => ({ default: module.UUIDGenerator })));
+const TimestampConverter = lazy(() => import('./pages/tools/TimestampConverter').then((module) => ({ default: module.TimestampConverter })));
+const ScreenshotToText = lazy(() => import('./pages/tools/ScreenshotToText').then((module) => ({ default: module.ScreenshotToText })));
+const ImageConverter = lazy(() => import('./pages/tools/ImageConverter').then((module) => ({ default: module.ImageConverter })));
+const SVGToPNG = lazy(() => import('./pages/tools/SVGToPNG').then((module) => ({ default: module.SVGToPNG })));
+const PNGToSVG = lazy(() => import('./pages/tools/PNGToSVG').then((module) => ({ default: module.PNGToSVG })));
+const Base64Tool = lazy(() => import('./pages/tools/Base64Tool').then((module) => ({ default: module.Base64Tool })));
+const RotatePDF = lazy(() => import('./pages/tools/RotatePDF').then((module) => ({ default: module.RotatePDF })));
+const ReorderPDFPages = lazy(() => import('./pages/tools/ReorderPDFPages').then((module) => ({ default: module.ReorderPDFPages })));
+const AddPageNumbersToPDF = lazy(() => import('./pages/tools/AddPageNumbersToPDF').then((module) => ({ default: module.AddPageNumbersToPDF })));
+const PDFProtectUnlock = lazy(() => import('./pages/tools/PDFProtectUnlock').then((module) => ({ default: module.PDFProtectUnlock })));
+const OCRPDF = lazy(() => import('./pages/tools/OCRPDF').then((module) => ({ default: module.OCRPDF })));
 
 type ToolCategory = 'All' | 'PDF' | 'Image' | 'Utility';
 
@@ -283,6 +284,17 @@ const TOOL_ITEMS: ToolItem[] = [
 
 const QUICK_LAUNCH = ['JPG to PDF', 'Merge PDF', 'Compress Image', 'PDF to JPG', 'QR Code', 'JSON Formatter'];
 
+const RouteLoading = () => (
+  <main className="mx-auto w-full max-w-[1100px] px-4 pb-10 pt-6 sm:px-5">
+    <div className="panel fade-up-soft p-6">
+      <div className="h-3 w-24 rounded-full bg-white/70" />
+      <div className="mt-4 h-9 w-56 rounded-full bg-white/70" />
+      <div className="mt-3 h-4 w-full max-w-[520px] rounded-full bg-white/60" />
+      <div className="mt-8 h-[320px] rounded-[28px] border border-[var(--border-soft)] bg-white/55" />
+    </div>
+  </main>
+);
+
 const filterTools = (query: string, category: ToolCategory) => {
   const q = query.trim().toLowerCase();
 
@@ -327,6 +339,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
   const [query, setQuery] = React.useState('');
   const [category, setCategory] = React.useState<ToolCategory>('All');
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const deferredQuery = useDeferredValue(query);
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -340,7 +353,7 @@ const Launcher = ({ compact = false }: { compact?: boolean }) => {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const tools = filterTools(query, category);
+  const tools = filterTools(deferredQuery, category);
 
   return (
     <section className={cn('mx-auto w-full max-w-[920px]', compact ? 'mt-4' : 'mt-8')}>
@@ -472,54 +485,56 @@ const App = () => {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--fg)]">
       <Header />
       <div className="flex-1">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/tools" element={<ToolsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/tools/compress-image" element={<CompressImage />} />
-          <Route path="/tools/jpg-to-pdf" element={<JPGToPDF />} />
-          <Route path="/tools/split-pdf" element={<SplitPDF />} />
-          <Route path="/tools/merge-pdf" element={<MergePDF />} />
-          <Route path="/tools/compress-pdf" element={<CompressPDF />} />
-          <Route path="/tools/pdf-to-jpg" element={<PDFToJPG />} />
-          <Route path="/tools/qr-code-generator" element={<QRCodeGenerator />} />
-          <Route path="/tools/qr-code-scanner" element={<QRCodeScanner />} />
-          <Route path="/tools/resize-image" element={<ResizeImage />} />
-          <Route path="/tools/heic-to-jpg" element={<HEICToJPG />} />
-          <Route path="/tools/crop-image" element={<CropImage />} />
-          <Route path="/tools/watermark-image" element={<WatermarkImage />} />
-          <Route path="/tools/blur-redact-image" element={<BlurRedactImage />} />
-          <Route path="/tools/json-formatter" element={<JSONFormatter />} />
-          <Route path="/tools/url-encode-decode" element={<URLEncodeDecode />} />
-          <Route path="/tools/word-counter" element={<WordCounter />} />
-          <Route path="/tools/uuid-generator" element={<UUIDGenerator />} />
-          <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
-          <Route path="/tools/screenshot-to-text" element={<ScreenshotToText />} />
-          <Route path="/tools/image-converter" element={<ImageConverter />} />
-          <Route path="/tools/svg-to-png" element={<SVGToPNG />} />
-          <Route path="/tools/png-to-svg" element={<PNGToSVG />} />
-          <Route path="/tools/base64" element={<Base64Tool />} />
-          <Route path="/tools/rotate-pdf" element={<RotatePDF />} />
-          <Route path="/tools/reorder-pdf-pages" element={<ReorderPDFPages />} />
-          <Route path="/tools/add-page-numbers-to-pdf" element={<AddPageNumbersToPDF />} />
-          <Route path="/tools/pdf-protect-unlock" element={<PDFProtectUnlock />} />
-          <Route path="/tools/ocr-pdf" element={<OCRPDF />} />
-          <Route path="/tools/*" element={<ToolsPage />} />
-          <Route
-            path="*"
-            element={
-              <main className="mx-auto w-full max-w-[920px] px-4 pb-10 pt-6 sm:px-5">
-                <div className="panel panel-subtle p-6 text-center">
-                  <h1 className="text-lg font-semibold text-[var(--fg)]">Page not found</h1>
-                  <Link to="/tools" className="mt-3 inline-flex text-sm text-[var(--fg-soft)] hover:text-[var(--fg)]">
-                    Back to tools
-                  </Link>
-                </div>
-              </main>
-            }
-          />
-        </Routes>
+        <Suspense fallback={<RouteLoading />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/tools" element={<ToolsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/tools/compress-image" element={<CompressImage />} />
+            <Route path="/tools/jpg-to-pdf" element={<JPGToPDF />} />
+            <Route path="/tools/split-pdf" element={<SplitPDF />} />
+            <Route path="/tools/merge-pdf" element={<MergePDF />} />
+            <Route path="/tools/compress-pdf" element={<CompressPDF />} />
+            <Route path="/tools/pdf-to-jpg" element={<PDFToJPG />} />
+            <Route path="/tools/qr-code-generator" element={<QRCodeGenerator />} />
+            <Route path="/tools/qr-code-scanner" element={<QRCodeScanner />} />
+            <Route path="/tools/resize-image" element={<ResizeImage />} />
+            <Route path="/tools/heic-to-jpg" element={<HEICToJPG />} />
+            <Route path="/tools/crop-image" element={<CropImage />} />
+            <Route path="/tools/watermark-image" element={<WatermarkImage />} />
+            <Route path="/tools/blur-redact-image" element={<BlurRedactImage />} />
+            <Route path="/tools/json-formatter" element={<JSONFormatter />} />
+            <Route path="/tools/url-encode-decode" element={<URLEncodeDecode />} />
+            <Route path="/tools/word-counter" element={<WordCounter />} />
+            <Route path="/tools/uuid-generator" element={<UUIDGenerator />} />
+            <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
+            <Route path="/tools/screenshot-to-text" element={<ScreenshotToText />} />
+            <Route path="/tools/image-converter" element={<ImageConverter />} />
+            <Route path="/tools/svg-to-png" element={<SVGToPNG />} />
+            <Route path="/tools/png-to-svg" element={<PNGToSVG />} />
+            <Route path="/tools/base64" element={<Base64Tool />} />
+            <Route path="/tools/rotate-pdf" element={<RotatePDF />} />
+            <Route path="/tools/reorder-pdf-pages" element={<ReorderPDFPages />} />
+            <Route path="/tools/add-page-numbers-to-pdf" element={<AddPageNumbersToPDF />} />
+            <Route path="/tools/pdf-protect-unlock" element={<PDFProtectUnlock />} />
+            <Route path="/tools/ocr-pdf" element={<OCRPDF />} />
+            <Route path="/tools/*" element={<ToolsPage />} />
+            <Route
+              path="*"
+              element={
+                <main className="mx-auto w-full max-w-[920px] px-4 pb-10 pt-6 sm:px-5">
+                  <div className="panel panel-subtle p-6 text-center">
+                    <h1 className="text-lg font-semibold text-[var(--fg)]">Page not found</h1>
+                    <Link to="/tools" className="mt-3 inline-flex text-sm text-[var(--fg-soft)] hover:text-[var(--fg)]">
+                      Back to tools
+                    </Link>
+                  </div>
+                </main>
+              }
+            />
+          </Routes>
+        </Suspense>
       </div>
       <Footer />
     </div>
