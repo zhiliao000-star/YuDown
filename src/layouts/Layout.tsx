@@ -68,8 +68,11 @@ export const Footer: React.FC = () => {
         </div>
       </div>
       <div className="border-t border-gray-200/60 py-6">
-        <div className="mx-auto w-full max-w-[1200px] px-4 text-[13px] font-medium text-gray-400 sm:px-6">
-          © {new Date().getFullYear()} YuTools. Local-first when possible.
+        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 text-[13px] font-medium text-gray-400 sm:px-6 md:flex-row md:items-center md:justify-between">
+          <span>© {new Date().getFullYear()} YuTools. Local-first when possible.</span>
+          <a href="https://startupfa.me/s/yutools?utm_source=yutools.qzz.io" target="_blank" rel="noopener noreferrer">
+            <img src="https://startupfa.me/images/logo.svg" alt="Startup Fame" width={208} height={36} />
+          </a>
         </div>
       </div>
     </footer>
