@@ -44,6 +44,7 @@ const AddPageNumbersToPDF = lazy(() => import('./pages/tools/AddPageNumbersToPDF
 const PDFProtectUnlock = lazy(() => import('./pages/tools/PDFProtectUnlock').then((module) => ({ default: module.PDFProtectUnlock })));
 const OCRPDF = lazy(() => import('./pages/tools/OCRPDF').then((module) => ({ default: module.OCRPDF })));
 const ToolkitsPage = lazy(() => import('./pages/Toolkits').then((module) => ({ default: module.ToolkitsPage })));
+const DriverEnglishPack = lazy(() => import('./pages/DriverEnglishPack').then((module) => ({ default: module.DriverEnglishPackPage })));
 
 type ToolCategory = 'All' | 'PDF' | 'Image' | 'Utility';
 
@@ -482,7 +483,8 @@ const App = () => {
             <Route path="/tools" element={<ToolsPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/toolkits/*" element={<ToolkitsPage />} />
+            <Route path="/toolkits/driver-english-pack" element={<DriverEnglishPack />} />
+            <Route path="/toolkits" element={<ToolkitsPage />} />
             <Route path="/tools/compress-image" element={<CompressImage />} />
             <Route path="/tools/jpg-to-pdf" element={<JPGToPDF />} />
             <Route path="/tools/split-pdf" element={<SplitPDF />} />

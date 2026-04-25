@@ -1,8 +1,9 @@
 import React from 'react';
-import { Search, FileText, Sparkles, ListChecks, MessageSquareText } from 'lucide-react';
+import { Search, MessageSquareText, Link as LinkIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 
-type ToolkitCategory = 'All Toolkits' | 'Driver Tools' | 'AI Business' | 'Templates' | 'Checklists';
+type ToolkitCategory = 'All Toolkits' | 'Driver Tools';
 
 type ToolkitItem = {
   slug: string;
@@ -15,39 +16,15 @@ type ToolkitItem = {
 const TOOLKIT_CATEGORIES: ToolkitCategory[] = [
   'All Toolkits',
   'Driver Tools',
-  'AI Business',
-  'Templates',
-  'Checklists',
 ];
 
 const TOOLKITS: ToolkitItem[] = [
   {
     slug: 'driver-english-pack',
     title: 'Driver English Pack',
-    description: 'Ready-to-send English messages for Uber, airport pickup, luggage, tolls, waiting, and address changes.',
+    description: 'Ready-to-send English messages for Uber, Lyft, airport pickup, luggage, tolls, waiting, and address changes.',
     category: 'Driver Tools',
     icon: MessageSquareText,
-  },
-  {
-    slug: 'ai-side-hustle-starter-kit',
-    title: 'AI Side Hustle Starter Kit',
-    description: 'Simple AI business ideas, prompt templates, setup steps, and product ideas for beginners.',
-    category: 'AI Business',
-    icon: Sparkles,
-  },
-  {
-    slug: 'rideshare-tax-checklist',
-    title: 'Rideshare Tax Checklist',
-    description: 'A practical checklist for tracking mileage, expenses, documents, 1099 income, and yearly records.',
-    category: 'Checklists',
-    icon: ListChecks,
-  },
-  {
-    slug: 'airport-pickup-message-cards',
-    title: 'Airport Pickup Message Cards',
-    description: 'Screenshot-friendly driver message cards for airport pickups, waiting, luggage, and passenger instructions.',
-    category: 'Templates',
-    icon: FileText,
   },
 ];
 
@@ -91,10 +68,12 @@ const ToolkitCard = ({ toolkit, index }: { toolkit: ToolkitItem; index: number }
   const Icon = toolkit.icon;
 
   return (
-    <article
+    <Link
+      to={`/toolkits/${toolkit.slug}`}
       className={cn(
-        'tool-card group cursor-default p-6 sm:p-7',
-        'animate-in fade-in slide-in-from-bottom-4'
+        'tool-card group p-6 sm:p-7 block',
+        'animate-in fade-in slide-in-from-bottom-4',
+        'hover:shadow-lg hover:border-gray-300'
       )}
       style={{ animationDelay: `${index * 35}ms`, animationFillMode: 'both' }}
     >
@@ -119,9 +98,12 @@ const ToolkitCard = ({ toolkit, index }: { toolkit: ToolkitItem; index: number }
         <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm font-semibold text-gray-600">
           {toolkit.category}
         </span>
-        <span className="text-sm font-semibold text-gray-400">Preview only</span>
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-[#e5322d] group-hover:gap-2 transition-all">
+          View Toolkit
+          <LinkIcon className="h-4 w-4" strokeWidth={2.5} />
+        </span>
       </div>
-    </article>
+    </Link>
   );
 };
 
