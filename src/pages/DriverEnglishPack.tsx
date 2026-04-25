@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2, Copy, MessageSquareText, Search } from 'lucide-react';
 import { cn } from '../lib/utils';
 
+const GITHUB_URL = 'https://github.com/zhiliao000-star/YuDown';
+
 const useDocumentMeta = () => {
   React.useEffect(() => {
     const previousTitle = document.title;
     const descriptionTag = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     const previousDescription = descriptionTag?.content;
 
-    document.title = 'Driver English Pack | YuTools';
+    document.title = '司机英文短句包 | YuTools';
 
     if (descriptionTag) {
-      descriptionTag.content = 'Ready-to-send English messages for rideshare drivers, airport pickups, luggage, tolls, waiting time, and address changes.';
+      descriptionTag.content = '给中国网约车司机使用的英文短句包，支持中文搜索、复制英文和朗读英文。';
     }
 
     return () => {
@@ -330,58 +332,127 @@ const PREVIEW_MESSAGES: Message[] = [
 ];
 
 const QUICK_FILTERS = [
-  { label: 'All', query: '' },
-  { label: 'Pickup', query: 'pickup' },
-  { label: 'Airport', query: 'airport' },
-  { label: 'Waiting', query: 'waiting' },
-  { label: 'Luggage', query: 'luggage' },
-  { label: 'Route', query: 'route' },
-  { label: 'Cancel', query: 'cancel' },
-  { label: 'Safety', query: 'safety' },
+  { label: '全部', query: '' },
+  { label: '接客', query: '接客' },
+  { label: '机场', query: '机场' },
+  { label: '等待', query: '等待' },
+  { label: '行李', query: '行李' },
+  { label: '路线', query: '路线' },
+  { label: '取消', query: '取消' },
+  { label: '安全', query: '安全' },
 ];
 
 const PACK_NOTES = [
-  'English message first',
-  'Chinese meaning under it',
-  'One tap copy',
-  'Works on phone screens',
+  '中文找场景',
+  '英文给乘客',
+  '一键复制',
+  '可直接朗读',
 ];
+
+const SEARCH_HINTS = [
+  {
+    terms: ['接客', '上车', '找人', '找不到车'],
+    matches: ['pickup', 'arrived', 'location', 'car', 'passenger', '接客', '上车', '找不到车', '乘客'],
+  },
+  {
+    terms: ['机场', '航站楼', '门号'],
+    matches: ['airport', 'arrivals', 'door number', '机场', '到达层', '门号'],
+  },
+  {
+    terms: ['等待', '迟到', '晚点', '等人'],
+    matches: ['wait', 'waiting', 'late', 'delay', '等待', '晚', '迟到'],
+  },
+  {
+    terms: ['行李', '箱子', '后备箱'],
+    matches: ['luggage', 'trunk', 'large', '行李', '后备箱'],
+  },
+  {
+    terms: ['路线', '绕路', '高速', '过路费', '收费'],
+    matches: ['route', 'toll', 'traffic', 'detour', 'construction', '路线', '绕路', '过路费', '收费'],
+  },
+  {
+    terms: ['取消', '拒绝', '不能接'],
+    matches: ['cancel', 'refusal', 'support', 'complete the trip', '取消', '拒绝', '不能'],
+  },
+  {
+    terms: ['安全', '儿童', '安全带', '抽烟', '宠物', '紧急'],
+    matches: ['safety', 'seatbelt', 'smoking', 'pet', 'emergency', 'car seat', '安全', '儿童', '抽烟', '宠物', '紧急'],
+  },
+];
+
+const SpeakerIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 9.5v5h3.2L12 18.2V5.8L7.2 9.5H4Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    <path d="M15.5 8.5c1 .9 1.5 2.1 1.5 3.5s-.5 2.6-1.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <path d="M18.4 5.8A8.3 8.3 0 0 1 21 12a8.3 8.3 0 0 1-2.6 6.2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+const GitHubIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 2.9.9.1-.7.4-1.1.7-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1.1-2.8-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.8 1.1A9.4 9.4 0 0 1 12 7.2c.8 0 1.6.1 2.4.3 1.9-1.4 2.8-1.1 2.8-1.1.6 1.4.2 2.4.1 2.7.7.8 1.1 1.7 1.1 2.8 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v2.5c0 .3.2.6.7.5A10.1 10.1 0 0 0 22 12.2C22 6.6 17.5 2 12 2Z" />
+  </svg>
+);
 
 const filterMessages = (query: string) => {
   const searchTerm = query.trim().toLowerCase();
   if (searchTerm.length === 0) return PREVIEW_MESSAGES;
 
-  return PREVIEW_MESSAGES.filter(
-    (msg) =>
-      msg.scenario.toLowerCase().includes(searchTerm) ||
-      msg.scenarioChinese?.toLowerCase().includes(searchTerm) ||
-      msg.english.toLowerCase().includes(searchTerm) ||
-      msg.chinese.toLowerCase().includes(searchTerm)
+  const expandedTerms = SEARCH_HINTS.flatMap((hint) =>
+    hint.terms.some((term) => term.toLowerCase().includes(searchTerm) || searchTerm.includes(term.toLowerCase()))
+      ? hint.matches
+      : []
   );
+  const terms = [searchTerm, ...expandedTerms.map((term) => term.toLowerCase())];
+
+  return PREVIEW_MESSAGES.filter((msg) => {
+    const searchableText = [msg.scenario, msg.scenarioChinese, msg.english, msg.chinese].filter(Boolean).join(' ').toLowerCase();
+    return terms.some((term) => searchableText.includes(term));
+  });
 };
 
 const AUDIENCE = [
   {
-    title: 'New rideshare drivers',
-    description: 'Keep a small set of reliable phrases ready while you build confidence.',
+    title: '新手司机',
+    description: '刚开始跑单时，不用临时组织英文，先把常见情况稳住。',
   },
   {
-    title: 'Chinese-speaking drivers in the U.S.',
-    description: 'Read the Chinese meaning, then send the English without rewriting it.',
+    title: '在美国跑车的中文用户',
+    description: '用中文找场景，看懂意思后直接复制英文或播放给乘客。',
   },
   {
-    title: 'Airport pickup and professional drivers',
-    description: 'Move faster through pickup, waiting, luggage, route, and safety situations.',
+    title: '机场和高频接单司机',
+    description: '接客、等待、行李、路线、安全这些高频场景可以更快处理。',
   },
 ];
 
 const MessagePreviewCard = ({ message, index }: { message: Message; index: number }) => {
   const [copied, setCopied] = React.useState(false);
+  const [speaking, setSpeaking] = React.useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message.english);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSpeak = () => {
+    if (!('speechSynthesis' in window)) return;
+
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(message.english);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.88;
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    setSpeaking(true);
+    window.speechSynthesis.speak(utterance);
   };
 
   return (
@@ -391,23 +462,39 @@ const MessagePreviewCard = ({ message, index }: { message: Message; index: numbe
     >
       <div className="flex items-start justify-between gap-3 border-b border-gray-100 pb-3">
         <div className="min-w-0">
-          <h4 className="truncate text-sm font-bold text-gray-900">{message.scenario}</h4>
-          <p className="mt-0.5 text-xs font-medium text-gray-500">{message.scenarioChinese ?? message.chinese}</p>
+          <h4 className="truncate text-sm font-bold text-gray-900">{message.scenarioChinese ?? message.chinese}</h4>
+          <p className="mt-0.5 text-xs font-medium text-gray-500">{message.scenario}</p>
         </div>
-        <button
-          type="button"
-          onClick={handleCopy}
-          className={cn(
-            'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-all active:bg-gray-100',
-            copied
-              ? 'border-green-200 bg-green-50 text-green-700'
-              : 'border-gray-200 bg-white text-[#e5322d] hover:bg-[#fff1f0]'
-          )}
-          aria-label={`Copy ${message.scenario}`}
-        >
-          {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          {copied ? 'Copied' : 'Copy'}
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={handleSpeak}
+            className={cn(
+              'inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-all active:bg-gray-100',
+              speaking
+                ? 'border-blue-200 bg-blue-50 text-blue-700'
+                : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+            )}
+            aria-label={`朗读 ${message.scenarioChinese ?? message.scenario}`}
+          >
+            <SpeakerIcon className="h-4 w-4" />
+            {speaking ? '停止' : '朗读'}
+          </button>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className={cn(
+              'inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-all active:bg-gray-100',
+              copied
+                ? 'border-green-200 bg-green-50 text-green-700'
+                : 'border-gray-200 bg-white text-[#e5322d] hover:bg-[#fff1f0]'
+            )}
+            aria-label={`复制 ${message.scenarioChinese ?? message.scenario}`}
+          >
+            {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {copied ? '已复制' : '复制'}
+          </button>
+        </div>
       </div>
 
       <p className="mt-3 text-[15px] font-semibold leading-relaxed text-gray-900">{message.english}</p>
@@ -451,32 +538,43 @@ export const DriverEnglishPackPage: React.FC = () => {
           className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 transition-colors hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Toolkits
+          返回工具库
         </Link>
 
         <div className="mt-5 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-md bg-[#fff1f0] px-3 py-1.5">
                 <MessageSquareText className="h-4 w-4 text-[#e5322d]" />
-                <span className="text-xs font-bold uppercase tracking-wide text-[#e5322d]">Driver Toolkit</span>
+                <span className="text-xs font-bold uppercase tracking-wide text-[#e5322d]">司机工具</span>
               </div>
 
               <h1 className="mt-4 text-[32px] font-black leading-tight text-gray-900 sm:text-[42px]">
-                Driver English Pack
+                司机英文短句包
               </h1>
 
               <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">
-                常用英文短句直接复制。适合 Uber/Lyft 接客、机场、等待、行李、路线和安全沟通。
+                中国司机用中文找场景，把英文短句复制或直接朗读给乘客。适合 Uber/Lyft 接客、机场、等待、行李、路线和安全沟通。
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:w-[420px]">
-              {PACK_NOTES.map((note) => (
-                <div key={note} className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-700">
-                  {note}
-                </div>
-              ))}
+            <div className="flex flex-col gap-3 lg:items-end">
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-10 items-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 hover:text-gray-900"
+              >
+                <GitHubIcon className="h-4 w-4" />
+                GitHub
+              </a>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:w-[420px]">
+                {PACK_NOTES.map((note) => (
+                  <div key={note} className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-700">
+                    {note}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -487,7 +585,7 @@ export const DriverEnglishPackPage: React.FC = () => {
                 ref={inputRef}
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Search: airport, luggage, waiting, cancel..."
+                placeholder="输入中文关键词：机场、行李、等待、取消、收费..."
                 className="search-bar"
               />
             </div>
@@ -516,10 +614,10 @@ export const DriverEnglishPackPage: React.FC = () => {
       <section className="mx-auto w-full max-w-[1100px] px-4 pb-8 sm:px-5">
         <div className="flex flex-col gap-2 border-b border-gray-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-[#e5322d]">Message library</p>
-            <h2 className="mt-1 text-2xl font-black text-gray-900">{filteredMessages.length} ready-to-use messages</h2>
+            <p className="text-sm font-bold uppercase tracking-wider text-[#e5322d]">短句库</p>
+            <h2 className="mt-1 text-2xl font-black text-gray-900">找到 {filteredMessages.length} 条可用短句</h2>
           </div>
-          <p className="text-sm text-gray-500">English copies to clipboard. Chinese stays as meaning reference.</p>
+          <p className="text-sm text-gray-500">中文负责理解场景，英文负责复制或朗读给乘客。</p>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -531,21 +629,20 @@ export const DriverEnglishPackPage: React.FC = () => {
         {filteredMessages.length === 0 && (
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-8 text-center">
             <p className="text-base font-medium text-gray-600">
-              No messages found for "{searchQuery}". Try a different search term.
+              没找到“{searchQuery}”相关短句。换个中文关键词试试，比如“机场”“行李”“等待”。
             </p>
           </div>
         )}
       </section>
 
-      {/* Who It's For Section */}
       <section className="mx-auto w-full max-w-[1100px] px-4 py-8 sm:px-5">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-[#e5322d]">Who it's for</p>
-            <h2 className="mt-1 text-2xl font-black text-gray-900">Built for quick use, not study time</h2>
+            <p className="text-sm font-bold uppercase tracking-wider text-[#e5322d]">适合谁用</p>
+            <h2 className="mt-1 text-2xl font-black text-gray-900">不是学英语，是现场能用</h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-gray-500">
-            Independent driver resource. Not affiliated with Uber, Lyft, or any airport authority.
+            独立司机工具。与 Uber、Lyft 或任何机场机构无关联。
           </p>
         </div>
 
