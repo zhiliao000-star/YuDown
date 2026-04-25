@@ -20,6 +20,9 @@ export const Header: React.FC = () => {
             <NavLink to="/tools" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-[#e5322d]' : 'text-gray-600 hover:text-gray-900')}>
               All Tools
             </NavLink>
+            <NavLink to="/toolkits" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-[#e5322d]' : 'text-gray-600 hover:text-gray-900')}>
+              Toolkits
+            </NavLink>
             <NavLink to="/about" className={({ isActive }) => cn('text-[15px] font-bold uppercase tracking-wide transition-colors', isActive ? 'text-[#e5322d]' : 'text-gray-600 hover:text-gray-900')}>
               About
             </NavLink>
